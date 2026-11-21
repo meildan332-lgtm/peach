@@ -380,3 +380,10 @@ body:before,.dark-mode:before,.dark-mode body:before{content:none!important;disp
 .dark-mode .calendar-grid.weekly-grid .day.today .week-date{background:rgba(255,99,132,.14)!important;color:#f3e9eb!important}
 .calendar-grid.weekly-grid .day.today .number{color:inherit!important}
 }
+
+/* 모바일 주간 목록 왼쪽 날짜·요일 칸: 검정 → 연분홍 */
+.week-date{background:#ffd9e2;color:#5a2a36}
+.week-date.week-day-0{color:#e03a5f}
+.week-date.week-day-6{color:#3f86c9}
+.dark-mode .week-date.week-day-0{color:#ef5f82}
+.dark-mode .week-date.week-day-6{color:#4aaee7}

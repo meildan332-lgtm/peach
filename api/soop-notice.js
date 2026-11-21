@@ -17,9 +17,6 @@ module.exports=async function handler(req,res){
       author:clean(row.userNick||row.user_nick||row.userId),
       profileImage:row.profileImage||null,
       date:row.regDate||row.reg_date||null,
-      likeCount:Number(row.count?.likeCnt||0),
-      commentCount:Number(row.count?.commentCnt||0),
-      viewCount:Number(row.count?.readCnt||0),
       postUrl:`https://www.sooplive.com/station/nslah830/post/${row.titleNo}`
     }));
     res.status(200).json({notices,boardUrl:BOARD_URL});
