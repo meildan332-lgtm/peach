@@ -563,3 +563,25 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .dark-mode .month-picker-grid button.current{border-color:var(--yellow)}
 .dark-mode .month-picker-grid button.active{background:var(--yellow);color:#211b1c}
 .dark-mode .month-picker-today{background:#3f3335;color:#eee}
+
+
+/* 오늘 일정 + 방송 공지: 한 박스 */
+.today-card .notice-block{margin-top:22px;padding-top:20px;border-top:1px solid #f0dfe2}
+.dark-mode .today-card .notice-block{border-top-color:#493b3e}
+
+/* 라이브 썸네일: 제목은 왼쪽 아래 텍스트만, 시간은 오른쪽 아래 검정 90% 뱃지 */
+.broadcast-live-info{left:16px;right:16px;bottom:14px;max-width:none;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:0;border-radius:0;background:transparent;backdrop-filter:none;pointer-events:none}
+.broadcast-live-info[hidden]{display:none}
+.broadcast-live-info .broadcast-live-title{flex:1 1 auto;min-width:0;margin:0;color:#fff;font-size:15px;text-shadow:0 1px 4px rgba(0,0,0,.75)}
+.broadcast-live-info .broadcast-live-duration{flex:0 0 auto;margin:0;padding:4px 10px;border-radius:8px;background:rgba(0,0,0,.9);color:#fff;font-size:12px;line-height:1.4}
+
+/* 신청한 콘텐츠가 없을 때: 상단 이미지와 오른쪽(오늘 일정+방송 공지) 아래쪽 가로선 맞춤 */
+@media(min-width:901px){
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]){align-items:stretch}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-left-stack>.live-card{flex:1 1 auto;aspect-ratio:16/9;height:auto}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card>a{position:absolute;inset:0;height:auto;min-height:0}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card{position:relative}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card img#broadcastImage{height:100%;max-height:none}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack>.today-card{flex:1 1 auto;display:flex;flex-direction:column}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .today-card .notice-block{margin-top:auto}
+}
