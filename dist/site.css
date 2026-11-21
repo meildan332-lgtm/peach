@@ -632,3 +632,11 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 
 /* 입장 팝업: 댓글 첨부 이미지 */
 .request-popup .request-comment-photo{margin-top:12px;max-height:340px}
+
+/* 입장 팝업: 오늘 하루 안보기 */
+.request-popup-foot{display:flex;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid #f0dfe2}
+.request-popup-skip{padding:9px 16px;border:0;border-radius:999px;background:#f7e8e5;color:#261e1f;font:inherit;font-size:15px;cursor:pointer}
+.request-popup-skip:hover{background:#ffdacf}
+.dark-mode .request-popup-foot{border-top-color:#493b3e}
+.dark-mode .request-popup-skip{background:#3f3335;color:#eee}
+.dark-mode .request-popup-skip:hover{background:#3f252a}
