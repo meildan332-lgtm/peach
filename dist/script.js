@@ -213,7 +213,7 @@ setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);
 
     var player=document.getElementById('hcPlayer'),frame=document.getElementById('hcFrame');
     function openPlayer(c){
-      var vertical=c.board==='catch';
+      var vertical=!!c.vertical;
       frame.className='hc-frame'+(vertical?' vertical':'');
       var f=document.createElement('iframe');
       f.src='https://vod.sooplive.com/player/'+encodeURIComponent(c.id)+'/embed?showChat=false&autoPlay=true&mutePlay=false';
@@ -234,7 +234,7 @@ setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);
       list.replaceChildren();
       rows.forEach(function(c,i){
         var li=document.createElement('li'),b=document.createElement('button');
-        b.type='button';b.className='hc-item'+(i<3?' top':'')+(c.board==='catch'?' vertical':'');
+        b.type='button';b.className='hc-item'+(i<3?' top':'')+(c.vertical?' vertical':'');
         b.setAttribute('aria-label',c.title+' 재생');
         var th=document.createElement('div');th.className='hc-thumb';
         if(c.thumbnail){var img=document.createElement('img');img.src=c.thumbnail;img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';th.append(img)}
