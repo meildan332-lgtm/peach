@@ -202,9 +202,29 @@ grid.addEventListener('dragend',()=>{dragInfo=null;clearDropMarks()});
 function noticeRelativeTime(value){if(!value)return'';const parsed=new Date(String(value).replace(' ','T')+'+09:00');if(Number.isNaN(parsed.getTime()))return'';const minutes=Math.max(0,Math.floor((Date.now()-parsed.getTime())/60000));if(minutes<1)return'방금 전';if(minutes<60)return`${minutes}분 전`;const hours=Math.floor(minutes/60);if(hours<24)return`${hours}시간 전`;const days=Math.floor(hours/24);return days<30?`${days}일 전`:String(value).slice(0,10).replaceAll('-','.');}
 function noticeMetric(icon,value,label){const span=document.createElement('span');span.className='notice-metric';span.setAttribute('aria-label',label);span.textContent=`${icon} ${Number(value||0).toLocaleString('ko-KR')}`;return span}
 function createNoticeCard(item,boardUrl){const card=document.createElement('a');card.className='broadcast-notice-card';card.href=item.postUrl||boardUrl||NOTICE_BOARD;card.target='_blank';card.rel='noopener';const title=document.createElement('h4');title.textContent=item.title||'방송 공지';const excerpt=document.createElement('p');excerpt.textContent=item.excerpt||'';if(!item.excerpt)excerpt.hidden=true;const meta=document.createElement('div');meta.className='broadcast-notice-meta';meta.append(noticeMetric('♡',item.likeCount,'좋아요'),noticeMetric('▱',item.commentCount,'댓글'),noticeMetric('◉',item.viewCount,'조회수'));const time=document.createElement('span');time.className='notice-time';time.textContent=noticeRelativeTime(item.date);meta.append(time);card.append(time,title,excerpt,meta);return card}
-async function loadTodayNotice(){const output=document.querySelector('#noticeContent');try{const response=await fetch('/api/soop-notice',{cache:'no-store'});if(!response.ok)throw new Error('notice request failed');const data=await response.json(),items=Array.isArray(data.notices)?data.notices:[];if(!items.length){output.innerHTML='<strong>등록 된 공지가 없습니다.</strong>';return}output.replaceChildren(...items.slice(0,2).map(item=>createNoticeCard(item,data.boardUrl)))}catch(error){output.innerHTML='<strong>등록 된 공지가 없습니다.</strong>'}}
+async function loadTodayNotice(){const output=document.querySelector('#noticeContent');try{const response=await fetch('/api/soop-notice',{cache:'no-store'});if(!response.ok)throw new Error('notice request failed');const data=await response.json(),items=Array.isArray(data.notices)?data.notices:[];if(!items.length){output.innerHTML='<strong>등록 된 공지가 없습니다.</strong>';return}output.replaceChildren(...items.slice(0,1).map(item=>createNoticeCard(item,data.boardUrl)))}catch(error){output.innerHTML='<strong>등록 된 공지가 없습니다.</strong>'}}
 function formatLiveDuration(seconds,startedAt){const elapsed=Number(seconds||0)*1000||Math.max(0,Date.now()-new Date(startedAt||0).getTime());if(!Number.isFinite(elapsed)||elapsed<=0)return'';const hours=Math.floor(elapsed/3600000),minutes=Math.floor(elapsed%3600000/60000);return hours?`${hours}시간 ${minutes}분째 방송 중`:`${minutes||1}분째 방송 중`}
 async function loadBroadcastStatus(){const image=document.querySelector('#broadcastImage'),status=document.querySelector('#broadcastStatus'),card=document.querySelector('#liveCard'),info=document.querySelector('#broadcastLiveInfo');const showOffline=()=>{image.src=OFFLINE_IMAGE;image.alt='냐쵸 오프라인 이미지';status.className='broadcast-status offline';status.querySelector('b').textContent='OFFLINE';info.hidden=true;card.classList.remove('is-live')};try{const response=await fetch('/api/soop-live',{cache:'no-store'});if(!response.ok)throw new Error('live status failed');const data=await response.json();if(!data.live){showOffline();return}image.onerror=()=>{image.onerror=null;image.src=OFFLINE_IMAGE};image.src=data.thumbnail;image.alt=data.title?`냐쵸 라이브: ${data.title}`:'냐쵸 라이브 방송 썸네일';status.className='broadcast-status live';status.querySelector('b').textContent='LIVE';const title=info.querySelector('.broadcast-live-title'),duration=info.querySelector('.broadcast-live-duration');title.textContent=data.title||'냐쵸 라이브 방송';duration.textContent=formatLiveDuration(data.elapsedSeconds,data.startedAt)||'방송 중';info.hidden=false;card.classList.add('is-live')}catch(error){showOffline()}}
+
+/* ---- 상단 이미지 슬라이드 (방송 꺼짐 상태에서 표시) ---- */
+const topSlider=document.createElement('div');topSlider.className='top-slider';
+document.querySelector('#liveCard>a').prepend(topSlider);
+let topSlideKey='',topSlideTimer=null;
+window.nyachoSetTopImages=(images,seconds)=>{
+  const list=(Array.isArray(images)?images:[]).map(url=>String(url||'').trim()).filter(Boolean),sec=Math.min(120,Math.max(2,Number(seconds)||5)),key=JSON.stringify([list,sec]);
+  if(key===topSlideKey)return;topSlideKey=key;
+  clearInterval(topSlideTimer);topSlideTimer=null;topSlider.replaceChildren();
+  document.querySelector('#liveCard').classList.toggle('has-slides',list.length>0);
+  if(!list.length)return;
+  const track=document.createElement('div');track.className='top-slider-track';
+  (list.length>1?[...list,list[0]]:list).forEach(url=>{const img=document.createElement('img');img.src=url;img.alt='상단 이미지';img.referrerPolicy='no-referrer';img.draggable=false;track.append(img)});
+  topSlider.append(track);
+  if(list.length<2)return;
+  let index=0;
+  track.addEventListener('transitionend',event=>{if(event.target!==track||index<list.length)return;track.style.transition='none';index=0;track.style.transform='translateX(0)';void track.offsetWidth;track.style.transition=''});
+  topSlideTimer=setInterval(()=>{index+=1;track.style.transform=`translateX(-${index*100}%)`},sec*1000);
+};
+window.nyachoSetTopImages(Array.isArray(savedSettings.topImages)&&savedSettings.topImages.length?savedSettings.topImages:(savedSettings.profileImage?[savedSettings.profileImage]:[]),savedSettings.slideSeconds);
 
 loginBtn.onclick=()=>{if(isAdmin){setAdmin(false);render()}else{document.querySelector('#adminId').value='';document.querySelector('#adminPassword').value='';document.querySelector('#rememberLogin').checked=localStorage.getItem('nyacho-auth-remember')==='true';document.querySelector('#loginError').textContent='';loginDialog.showModal()}};
 darkModeBtn.onclick=()=>setDark(!isDark);
