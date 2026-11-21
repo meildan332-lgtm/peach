@@ -353,3 +353,8 @@ button,button:hover,button:focus,.watch-btn,.watch-btn:hover,.notice-link,.float
 #memoPad .memo-pad-head{background:#ffd0db;border-bottom:1px solid #ffa3b8}
 #memoPad .memo-pad-head span,#memoPad .memo-pad-close{color:#5a2a36}
 #memoPad .memo-pad-close:hover{background:rgba(255,99,132,.22)}
+
+/* 메모장 작성 영역: 흰색 (줄 무늬는 연분홍으로 유지) */
+#memoPad,.dark-mode #memoPad{background:#fff}
+#memoPad .memo-pad-text,.dark-mode #memoPad .memo-pad-text{background-color:#fff;color:#3a2126;background-image:linear-gradient(90deg,transparent 40px,#ffb3c6 40px,#ffb3c6 42px,transparent 42px),repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(255,99,132,.22) 31px,rgba(255,99,132,.22) 32px)}
+#memoPad .memo-pad-text::placeholder{color:rgba(58,33,38,.4)}
