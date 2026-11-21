@@ -342,3 +342,14 @@ body:before{color:#f2c3bd}
 .calendar-grid.weekly-grid .day.today .week-date,.calendar-grid.weekly-grid .day.today .week-date.week-day-0,.calendar-grid.weekly-grid .day.today .week-date.week-day-6{background:#ff6384!important;color:#fff!important}
 .calendar-grid.weekly-grid .day.today .number{background:transparent;color:#fff;box-shadow:none;min-width:0;height:auto;padding:0}
 }
+
+/* 버튼·오늘 날짜 그림자 제거 */
+button,button:hover,button:focus,.watch-btn,.watch-btn:hover,.notice-link,.floating-add,.floating-add:hover,.save-btn,.admin-login-btn,.admin-login-btn.logged-in,.icon-button,.icon-button:hover,.month-controls,.profile-menu button,.google-login-btn,.live-badge,.day.today .number,.dark-mode .day.today .number,.calendar-grid.weekly-grid .day.today .number{box-shadow:none!important}
+
+/* 달력 요일 줄 + 메모지 상단바: 검정 → 연분홍 */
+.weekdays,.dark-mode .weekdays{background:#ffd0db;color:#5a2a36;border-bottom:3px solid #ff6384}
+.weekdays span:first-child{color:#e03a5f}.weekdays span:last-child{color:#3f86c9}
+#memoPad,.dark-mode #memoPad{border-color:#ffa3b8}
+#memoPad .memo-pad-head{background:#ffd0db;border-bottom:1px solid #ffa3b8}
+#memoPad .memo-pad-head span,#memoPad .memo-pad-close{color:#5a2a36}
+#memoPad .memo-pad-close:hover{background:rgba(255,99,132,.22)}
