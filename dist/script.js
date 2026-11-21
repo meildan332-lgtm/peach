@@ -271,7 +271,9 @@ window.nyachoSetAdmin=setAdmin;window.nyachoTypeIdFromLabel=label=>scheduleTypes
 const buildLegend=()=>{const legend=document.querySelector('.legend');legend.innerHTML='';scheduleTypes.forEach(type=>{const item=document.createElement('span'),dot=document.createElement('i');dot.className='dot';dot.style.backgroundColor=type.color;item.append(dot,document.createTextNode(type.label));legend.append(item)})};buildLegend();
 // 설정에서 일정 유형(이름·색)을 바꾸면 새로고침 없이 달력·오늘 일정·범례에 바로 반영합니다.
 window.nyachoUpdateScheduleTypes=types=>{if(!Array.isArray(types)||!types.length)return;scheduleTypes.splice(0,scheduleTypes.length,...types.map(type=>({...type})));Object.keys(typeColor).forEach(id=>delete typeColor[id]);Object.keys(typeLabel).forEach(id=>delete typeLabel[id]);scheduleTypes.forEach(type=>{typeColor[type.id]=type.color;typeLabel[type.id]=type.label});buildLegend();render();window.nyachoRenderToday?.()};
-setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);render();loadTodayNotice();loadBroadcastStatus();setInterval(loadBroadcastStatus,60000);
+// 공지·방송 상태·첫 이미지가 준비된 뒤에 상단 카드를 한 번에 보여줘서, 로딩 중 이미지가 바뀌거나 커지는 깜빡임을 막습니다.
+const markLiveCardReady=()=>{const card=document.querySelector('#liveCard');if(card.classList.contains('is-ready'))return;const img=card.querySelector('.top-slider img'),done=()=>requestAnimationFrame(()=>card.classList.add('is-ready'));if(img&&!img.complete&&card.classList.contains('has-slides')&&!card.classList.contains('is-live')){img.addEventListener('load',done,{once:true});img.addEventListener('error',done,{once:true});setTimeout(done,1500)}else done()};
+setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);render();Promise.allSettled([loadTodayNotice(),loadBroadcastStatus()]).then(markLiveCardReady);setTimeout(markLiveCardReady,3000);setInterval(loadBroadcastStatus,60000);
 
 /* 핫클립 */
 (function(){

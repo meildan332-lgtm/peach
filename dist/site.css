@@ -640,3 +640,16 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .dark-mode .request-popup-foot{border-top-color:#493b3e}
 .dark-mode .request-popup-skip{background:#3f3335;color:#eee}
 .dark-mode .request-popup-skip:hover{background:#3f252a}
+
+/* 입장 팝업 닫기(X): 포커스 외곽선 제거 */
+.request-popup-close,.request-popup-close:focus,.request-popup-close:focus-visible,.request-popup-close:active{outline:none!important;border:0!important;box-shadow:none!important}
+
+/* 상단 이미지 카드: 준비되기 전에는 숨겼다가 부드럽게 표시 */
+.photo-card>a{transition:opacity .35s ease}
+.photo-card:not(.is-ready)>a{opacity:0}
+
+/* 방송 공지 오른쪽 끝: UP순위 버튼 (신청한 콘텐츠가 있을 때만) */
+.request-rank-btn{flex:0 0 auto;margin-left:auto;padding:7px 14px;border:0;border-radius:999px;background:#e5253a;color:#fff;font:inherit;font-size:15px;line-height:1.2;cursor:pointer;transition:background-color .15s}
+.request-rank-btn:hover{background:#c91a2e}
+.request-rank-btn[hidden]{display:none}
+.request-rank-btn:focus-visible{outline:2px solid #e5253a;outline-offset:2px}
