@@ -459,3 +459,15 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 /* 뱅온/휴방 배지: 날짜 칸 오른쪽 끝 */
 .day-head{justify-content:flex-start}
 .day-head .day-badge{margin-left:auto}
+
+/* 닫기(X) 버튼 포커스 외곽선 제거 */
+.dialog-close:focus,.dialog-close:focus-visible,.dialog-close:active{outline:none!important;box-shadow:none!important}
+
+/* 닫기(X) 버튼: 배경 없이, 끝이 둥근 X */
+.dialog-close,.dark-mode .dialog-close,.dialog-close:hover,.dark-mode .dialog-close:hover{background:transparent!important;font-size:0!important;color:#2b2123;border:0!important}
+.dark-mode .dialog-close{color:#f4e2dd}
+.dialog-close::before,.dialog-close::after{content:'';position:absolute;left:50%;top:50%;width:17px;height:2.5px;border-radius:999px;background:currentColor;transition:background-color .15s}
+.dialog-close::before{transform:translate(-50%,-50%) rotate(45deg)}
+.dialog-close::after{transform:translate(-50%,-50%) rotate(-45deg)}
+.dialog-close:hover{color:var(--yellow)}
+.dark-mode .dialog-close:hover{color:var(--yellow)}
