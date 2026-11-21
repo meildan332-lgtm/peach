@@ -359,3 +359,13 @@ body:before,.dark-mode:before,.dark-mode body:before{content:none!important;disp
 .dark-mode .today-notice .notice-link,.dark-mode .notice-heading .notice-link{background:#4a484c;color:#f1eaec;border-color:#4a484c}
 .dark-mode .today-notice .broadcast-notice-card p{color:#c9c4c6}
 .dark-mode .today-notice #noticeContent>strong{color:#b8b3b5!important}
+
+/* 방송 공지 좋아요·댓글·조회수 숨김 */
+.broadcast-notice-meta,.notice-metric{display:none!important}
+
+/* 오늘 일정 없음 박스 + 방송 공지 박스: 회색 → 연한 분홍 (밝은 모드) */
+.empty-schedule#todaySchedule{background:#ffe7ed!important;color:#c0687f!important;border-color:#ffb3c6!important}
+.empty-schedule#todaySchedule>span{filter:none;opacity:.9}
+.today-notice{background:#ffe7ed!important;border-color:#ffb3c6!important}
+.today-notice .broadcast-notice-card+.broadcast-notice-card{border-top-color:#ffc2d0}
+.notice-heading .notice-link{background:#ffd3de}
