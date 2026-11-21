@@ -445,7 +445,8 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .day-head{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
 .day-badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:999px;font-size:14px;line-height:1.45;white-space:nowrap}
 .day-badge.on{background:var(--yellow);color:#fff}
-.day-badge.off{color:#261e1f}
+.day-badge.off,.dark-mode .day-badge.off{background:transparent;border:0;padding:2px 0;color:#261e1f}
+.dark-mode .day-badge.off{color:#f3e9eb}
 .calendar-grid.weekly-grid .events>.day-badge{align-self:flex-start}
 @media(max-width:600px){.manage-title-row h2{font-size:30px!important}.manage-mode button{font-size:16px;min-width:56px}}
 
@@ -538,3 +539,27 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 /* 뱅온 시간: 배경·외곽선 없이 텍스트만 */
 .day-badge.on,.dark-mode .day-badge.on{background:transparent;border:0;padding:2px 0;color:#1f1719}
 .dark-mode .day-badge.on{color:#f3e9eb}
+
+/* ===== 월 선택 모달 ===== */
+#monthTitle{cursor:pointer;border-radius:14px;padding:0 10px;transition:background-color .15s}
+#monthTitle:hover,#monthTitle:focus-visible{background:rgba(255,99,132,.12);outline:none}
+.month-picker-dialog{width:min(380px,92vw)}
+.month-picker-shell{position:relative;padding:30px 26px 24px}
+.month-picker-year{display:flex;align-items:center;justify-content:center;gap:18px;margin:4px 0 20px}
+.month-picker-year strong{min-width:100px;text-align:center;font-size:28px}
+.month-picker-year button{width:38px;height:38px;border:1px solid #ddd3d4;border-radius:50%;background:#fff;color:#2b2123;font:inherit;font-size:24px;line-height:1;cursor:pointer}
+.month-picker-year button:hover{background:#fbaaba;border-color:#c81236}
+.month-picker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.month-picker-grid button{padding:14px 0;border:1px solid #ecdfe1;border-radius:14px;background:#faf5f6;color:inherit;font:inherit;font-size:19px;cursor:pointer}
+.month-picker-grid button:hover{background:#ffdacf}
+.month-picker-grid button.current{border-color:var(--yellow)}
+.month-picker-grid button.active{background:var(--yellow);border-color:var(--yellow);color:#261e1f}
+.month-picker-today{display:block;width:100%;margin-top:16px;padding:12px;border:0;border-radius:999px;background:#f7e8e5;color:#261e1f;font:inherit;font-size:17px;cursor:pointer}
+.month-picker-today:hover{background:#ffdacf}
+.dark-mode .month-picker-year button{background:#2d2426;color:#f6e5e1;border-color:#4b3b3e}
+.dark-mode .month-picker-year button:hover{background:#3b282c}
+.dark-mode .month-picker-grid button{background:#2d2426;border-color:#493b3e}
+.dark-mode .month-picker-grid button:hover{background:#3a272b}
+.dark-mode .month-picker-grid button.current{border-color:var(--yellow)}
+.dark-mode .month-picker-grid button.active{background:var(--yellow);color:#211b1c}
+.dark-mode .month-picker-today{background:#3f3335;color:#eee}

@@ -90,6 +90,7 @@ function readEditor(item,id=createId()){const name=item.querySelector('.manage-n
 const manageBangon=document.querySelector('#manageBangon'),manageBangonPicker=document.querySelector('#manageBangonPicker'),manageMode=document.querySelector('#manageMode');
 manageBangonPicker.innerHTML=timePickerMarkup();
 function saveDayStatus(){localStorage.setItem('nyacho-daystatus',JSON.stringify(dayStatus));window.nyachoFirebaseSave?.('dayStatus',dayStatus)}
+function applyOffPreset(item){if(!item)return;const type=item.querySelector('.manage-type'),name=item.querySelector('.manage-name');if(type&&[...type.options].some(o=>o.value==='live'))type.value='live';if(name)name.value='휴방'}
 function renderStatusControls(){
   const status=dayStatus[manageDate];
   manageMode.querySelectorAll('button').forEach(button=>button.classList.toggle('active',status?.mode===button.dataset.mode));
@@ -107,6 +108,7 @@ manageMode.onclick=event=>{
   if(dayStatus[manageDate]?.mode===mode)delete dayStatus[manageDate];
   else dayStatus[manageDate]=mode==='on'?{mode:'on',time:''}:{mode:'off'};
   saveDayStatus();renderStatusControls();render();
+  if(dayStatus[manageDate]?.mode==='off')applyOffPreset(manageList.querySelector('.manage-new'));
 };
 manageBangon.addEventListener('click',event=>{
   const periodButton=event.target.closest('.period-button');if(!periodButton)return;
@@ -119,7 +121,7 @@ function dayBadgeFor(dateKey){
   const status=dayStatus[dateKey];if(!status)return null;
   const badge=document.createElement('span');
   if(status.mode==='on'){badge.className='day-badge on';badge.textContent=status.time?formatTime(status.time):'뱅온'}
-  else if(status.mode==='off'){badge.className='day-badge off';badge.textContent=typeLabel.live||'휴방';badge.style.backgroundColor=typeColor.live||'#c9c4c5'}
+  else if(status.mode==='off'){badge.className='day-badge off';badge.textContent=typeLabel.live||'휴방'}
   else return null;
   return badge;
 }
@@ -129,7 +131,7 @@ function renderManager(){
   if(!events.length){showNewScheduleEditor();return}
   events.forEach((event,index)=>{const row=document.createElement('div');row.className='manage-simple-row';row.dataset.index=index;row.innerHTML='<span class="manage-simple-title"></span><span class="manage-simple-time"></span><span class="manage-order-buttons"><button type="button" data-action="move-up" aria-label="위로 이동">▲</button><button type="button" data-action="move-down" aria-label="아래로 이동">▼</button></span><button type="button" data-action="edit-simple">수정</button><button type="button" class="danger" data-action="delete-simple">삭제</button>';row.querySelector('.manage-simple-title').textContent=event[0];row.querySelector('.manage-simple-time').textContent=formatTime(event[2]);row.querySelector('[data-action="move-up"]').disabled=index===0;row.querySelector('[data-action="move-down"]').disabled=index===events.length-1;manageList.append(row)});
 }
-function showNewScheduleEditor(){document.querySelector('#manageFooter').hidden=true;manageList.innerHTML='';const item=document.createElement('div');item.className='manage-item manage-new';item.innerHTML=editorFieldsMarkup(true);fillEditor(item,['',scheduleTypes[0]?.id||'personal','','','',manageDate,manageDate,''],manageDate);manageList.append(item);item.querySelector('.manage-name').focus()}
+function showNewScheduleEditor(){document.querySelector('#manageFooter').hidden=true;manageList.innerHTML='';const item=document.createElement('div');item.className='manage-item manage-new';item.innerHTML=editorFieldsMarkup(true);fillEditor(item,['',scheduleTypes[0]?.id||'personal','','','',manageDate,manageDate,''],manageDate);if(dayStatus[manageDate]?.mode==='off')applyOffPreset(item);manageList.append(item);item.querySelector('.manage-name').focus()}
 function showScheduleEditor(index){const event=custom[manageDate]?.[index];if(!event)return;document.querySelector('#manageFooter').hidden=true;manageList.innerHTML='';const item=document.createElement('div');item.className='manage-item manage-edit';item.dataset.index=index;item.innerHTML=editorFieldsMarkup(false);fillEditor(item,event,manageDate);manageList.append(item);item.querySelector('.manage-name').focus()}
 function openManager(date){if(!isAdmin)return;manageDate=date;if(!manageDialog.open)manageDialog.showModal();renderManager()}
 function openDay(date){const events=[...(seed[date]||[]),...(custom[date]||[])],dateParts=date.split('-').map(Number);document.querySelector('#dayDialogTitle').textContent=`${dateParts[1]}월 ${dateParts[2]}일 일정`;dayScheduleList.innerHTML='';if(!events.length){dayScheduleList.innerHTML='<p class="day-empty">등록된 일정이 없습니다.</p>'}else events.forEach(raw=>{const [name,type,time,description,members]=normalizeEvent(raw,date),item=document.createElement('article');item.className='day-schedule-card';item.innerHTML=`<div class="day-card-main"><div class="day-card-title-row"><i class="day-type-dot" aria-hidden="true"></i><h3></h3></div>${description?'<p class="day-card-description"></p>':''}${members?'<div class="day-card-member-profiles"></div>':''}</div>${time?`<time>${formatTime(time)}</time>`:''}`;item.querySelector('.day-type-dot').style.backgroundColor=typeColor[type]||'#ffb3c6';item.querySelector('h3').textContent=name;if(description)item.querySelector('.day-card-description').textContent=description;if(members){const output=item.querySelector('.day-card-member-profiles');if(window.nyachoRenderMemberProfiles)window.nyachoRenderMemberProfiles(output,members);else output.textContent=members}dayScheduleList.append(item)});if(!dayDialog.open)dayDialog.showModal()}
@@ -233,6 +235,16 @@ document.querySelector('#prevMonth').onclick=()=>{if(mobileWeekMedia.matches)vie
 document.querySelector('#nextMonth').onclick=()=>{if(mobileWeekMedia.matches)view.setDate(view.getDate()+7);else{view.setDate(1);view.setMonth(view.getMonth()+1)}render()};
 document.querySelector('#todayBtn').onclick=()=>{view=new Date(Number(part('year')),Number(part('month'))-1,Number(part('day')));render()};
 mobileWeekMedia.addEventListener('change',render);
+/* ---- 월 선택 모달: 월 제목을 누르면 다른 해/달로 바로 이동 ---- */
+const monthPicker=document.querySelector('#monthPickerDialog'),mpGrid=document.querySelector('#mpGrid'),mpYear=document.querySelector('#mpYear');let mpYearValue=0;
+function renderMonthPicker(){mpYear.textContent=`${mpYearValue}년`;mpGrid.innerHTML='';for(let m=0;m<12;m++){const button=document.createElement('button');button.type='button';button.textContent=`${m+1}월`;if(mpYearValue===view.getFullYear()&&m===view.getMonth())button.classList.add('active');if(mpYearValue===Number(part('year'))&&m===Number(part('month'))-1)button.classList.add('current');button.onclick=()=>{view=new Date(mpYearValue,m,1);monthPicker.close();render()};mpGrid.append(button)}}
+const openMonthPicker=()=>{mpYearValue=view.getFullYear();renderMonthPicker();monthPicker.showModal()};
+title.onclick=openMonthPicker;
+title.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openMonthPicker()}};
+document.querySelector('#mpPrevYear').onclick=()=>{mpYearValue-=1;renderMonthPicker()};
+document.querySelector('#mpNextYear').onclick=()=>{mpYearValue+=1;renderMonthPicker()};
+document.querySelector('#mpToday').onclick=()=>{monthPicker.close();document.querySelector('#todayBtn').click()};
+monthPicker.addEventListener('click',event=>{if(event.target===monthPicker)monthPicker.close()});
 document.querySelector('#manageClose').onclick=()=>manageDialog.close();
 document.querySelector('#dayClose').onclick=()=>dayDialog.close();
 dayDialog.addEventListener('click',event=>{if(event.target!==dayDialog)return;const rect=dayDialog.getBoundingClientRect();if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)dayDialog.close()});
