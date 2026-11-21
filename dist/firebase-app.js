@@ -1,9 +1,9 @@
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence,browserSessionPersistence}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
-import{getFirestore,doc,setDoc,onSnapshot,collection,getDocs,getDoc,writeBatch}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
+import{getFirestore,doc,setDoc,onSnapshot,collection,getDocs,getDoc,writeBatch,deleteDoc}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const firebaseConfig={apiKey:'AIzaSyAmBmSFCgaFd-yE2vsLItLWKtU0Z8U_bSg',authDomain:'nyachyo-97f7d.firebaseapp.com',projectId:'nyachyo-97f7d',storageBucket:'nyachyo-97f7d.firebasestorage.app',messagingSenderId:'892799826403',appId:'1:892799826403:web:efbffa3ff82921746c88d6',measurementId:'G-5WYFR3YCLB'};
-const ADMIN_EMAILS=new Set(['natty09@gmail.com','nyachyo29@gmail.com','rnskrns@gmail.com']);
+const ADMIN_EMAILS=new Set(['nslah830@gmail.com']);
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const errorText=document.querySelector('#loginError'),rememberInput=document.querySelector('#rememberLogin');
 
@@ -60,5 +60,5 @@ onSnapshot(collection(db,'scheduleDocs'),snapshot=>{
   window.dispatchEvent(new CustomEvent('nyachoSchedulesRemote',{detail:scheduleDocsToMap(snapshot.docs)}));
   migrateLegacySchedules();
 },error=>console.warn('Firestore scheduleDocs read failed',error));
-onAuthStateChanged(auth,user=>{if(ADMIN_EMAILS.has(user?.email?.toLowerCase()||'')){const remember=localStorage.getItem('nyacho-auth-remember')==='true';window.nyachoSetAdmin?.(true,remember);startMemoSync();migrateLegacySchedules()}else{window.nyachoSetAdmin?.(false,false);if(user)signOut(auth)}});
-for(const [name,eventName]of[['contents','nyachoContentsRemote'],['requests','nyachoRequestsRemote'],['settings','nyachoSettingsRemote'],['memberGroups','nyachoMemberGroupsRemote']]){onSnapshot(doc(db,'siteData',name),snapshot=>{if(!snapshot.exists())return;window.dispatchEvent(new CustomEvent(eventName,{detail:snapshotValue(snapshot)}))},error=>console.warn(`Firestore ${name} sync failed`,error))}
+onAuthStateChanged(auth,user=>{if(ADMIN_EMAILS.has(user?.email?.toLowerCase()||'')){const remember=localStorage.getItem('nyacho-auth-remember')==='true';window.nyachoSetAdmin?.(true,remember);startMemoSync();migrateLegacySchedules();deleteDoc(doc(db,'siteData','contents')).catch(()=>{})}else{window.nyachoSetAdmin?.(false,false);if(user)signOut(auth)}});
+for(const [name,eventName]of[['requests','nyachoRequestsRemote'],['settings','nyachoSettingsRemote'],['memberGroups','nyachoMemberGroupsRemote']]){onSnapshot(doc(db,'siteData',name),snapshot=>{if(!snapshot.exists())return;window.dispatchEvent(new CustomEvent(eventName,{detail:snapshotValue(snapshot)}))},error=>console.warn(`Firestore ${name} sync failed`,error))}

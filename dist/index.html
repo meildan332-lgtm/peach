@@ -24,7 +24,6 @@
     </a>
     <nav aria-label="주요 메뉴" class="top-tabs">
       <a class="active" href="#schedule" data-view="schedule">일정표</a>
-      <a href="#Backlog" data-view="content">별별 · 업보</a>
     </nav>
     <script>(function(){var v=document.documentElement.dataset.view;document.querySelectorAll('.top-tabs a').forEach(function(a){a.classList.toggle('active',a.dataset.view===v)})})();</script>
     <div class="header-actions">
@@ -71,36 +70,7 @@
         <div class="calendar-grid" id="calendarGrid"></div>
       </div>
     </section>
-    <section class="content-board" id="content-board" hidden>
-      <div class="board-heading"><div><h1>별별 · 업보</h1></div></div>
-      <section class="coupon-guide" id="couponGuide">
-        <div class="coupon-guide-head"><button type="button" class="guide-edit-btn admin-only" id="guideEditBtn">안내 수정</button></div>
-        <div id="couponGuideContent">
-        <div class="coupon-guide-columns">
-        <section class="coupon-reward-section"><h2>쿠폰 보상 안내</h2>
-        <div class="coupon-reward-grid">
-          <div class="coupon-reward-row"><strong>쿠폰 1개</strong><span>퀵뷰 / 구독권 / 닉네임 언급 애교 대사</span></div>
-          <div class="coupon-reward-row"><strong>쿠폰 3개</strong><span>방송국 동글 / 움짤 프사 / 열애 배너</span></div>
-          <div class="coupon-reward-row"><strong>쿠폰 5개</strong><span>단컷 방셀 / 상단 배너 / 하단 배너 / 프사 그려주기</span></div>
-          <div class="coupon-reward-row"><strong>쿠폰 7개</strong><span>움짤 방셀 / 음성 메시지 30초</span></div>
-          <div class="coupon-reward-row"><strong>쿠폰 10개</strong><span>단컷＋움짤 방셀 / 배너 세트</span></div>
-          <div class="coupon-reward-row"><strong>쿠폰 20개</strong><span>스토리 방셀</span></div>
-        </div>
-        </section>
-        <div class="ranking-reward"><h3>별별랭킹 보상 <small>아직 확정 아님 · 계속 수정 중</small></h3><div class="ranking-reward-grid"><article><strong>시청 시간</strong><p>100시간 달성 시 핀볼 1개<br>100시간 이상부터 50시간마다 핀볼 1개 추가<br>1~5등까지 핀볼 1개씩 추가<br>총 3명 · 쿠폰 1개</p></article><article><strong>채팅</strong><p>1등 쿠폰 5개 · 2등 쿠폰 3개<br>3~5등 쿠폰 2개 · 6~10등 쿠폰 1개<br>11~30등 핀볼 2회 · 쿠폰 1개</p></article><article><strong>별풍</strong><p>1등 쿠폰 10개 · 2등 쿠폰 7개<br>3등 쿠폰 5개 · 4~10등 쿠폰 1개씩</p></article></div></div>
-        <div class="outfit-guide"><article><h3>방셀 가능 의상</h3><ol><li>기본 의상(세일러)</li><li>기본 츄리닝</li><li>백수옷</li><li>흰 원피스</li><li>가을 니트</li></ol></article><article><h3>11월만 가능 <small>쿠폰 10개 이상</small></h3><ol><li>메이드</li><li>전투 메이드</li></ol></article><article><h3>방셀 불가능 의상</h3><ol><li>아르마</li><li>비키니</li><li>메이드</li><li>전투 메이드</li></ol></article></div>
-        </div>
-        <p class="coupon-guide-note">혹시 누락됐다면 냐쵸에게 말해주세요!</p>
-        </div>
-        <button type="button" class="guide-save-btn admin-only" id="guideSaveBtn" hidden>안내 저장</button>
-      </section>
-      <div class="board-search"><label for="contentSearch" aria-label="표 검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16.5 16.5 4 4"></path></svg></label><input type="search" id="contentSearch" placeholder="닉네임 또는 내용 검색"></div>
-      <div class="content-tables-grid">
-        <section class="content-table-panel"><h2>쿠폰</h2><div class="content-table-wrap"><table class="content-table"><thead><tr><th>닉네임</th><th>쿠폰</th><th class="admin-only">관리</th></tr></thead><tbody class="content-table-body" id="couponTableBody" data-category="쿠폰"></tbody></table><div class="table-add-row admin-only"><button class="content-add-btn" data-category="쿠폰" type="button">행 추가</button></div></div></section>
-        <section class="content-table-panel"><h2>업보</h2><div class="content-table-wrap"><table class="content-table"><thead><tr><th>닉네임</th><th>업보</th><th class="admin-only">관리</th></tr></thead><tbody class="content-table-body" id="karmaTableBody" data-category="업보"></tbody></table><div class="table-add-row admin-only"><button class="content-add-btn" data-category="업보" type="button">행 추가</button></div></div></section>
-      </div>
-      <section class="ranking-panel request-panel"><div class="ranking-heading"><div><h2>신청한 콘텐츠</h2></div><button type="button" class="request-add admin-only" id="requestAddBtn" aria-label="신청 콘텐츠 관리"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.12 7.12 0 0 0-1.62-.94L14.38 2.8a.49.49 0 0 0-.49-.4h-3.84a.49.49 0 0 0-.49.4L9.2 5.32c-.59.24-1.13.56-1.62.94L5.19 5.3a.49.49 0 0 0-.61.22L2.66 8.84a.49.49 0 0 0 .12.64l2.03 1.58c-.05.31-.08.65-.08.94s.03.63.08.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.12.22.38.31.61.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.52c.04.24.24.4.49.4h3.84c.25 0 .45-.16.49-.4l.36-2.52c.59-.24 1.13-.56 1.62-.94l2.39.96c.23.09.49 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.02-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"></path></svg></button></div><div id="requestList" class="request-list"></div></section>
-    </section>
+    <section class="ranking-panel request-panel"><div class="ranking-heading"><div><h2>신청한 콘텐츠</h2></div><button type="button" class="request-add admin-only" id="requestAddBtn" aria-label="신청 콘텐츠 관리"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.12 7.12 0 0 0-1.62-.94L14.38 2.8a.49.49 0 0 0-.49-.4h-3.84a.49.49 0 0 0-.49.4L9.2 5.32c-.59.24-1.13.56-1.62.94L5.19 5.3a.49.49 0 0 0-.61.22L2.66 8.84a.49.49 0 0 0 .12.64l2.03 1.58c-.05.31-.08.65-.08.94s.03.63.08.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.12.22.38.31.61.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.52c.04.24.24.4.49.4h3.84c.25 0 .45-.16.49-.4l.36-2.52c.59-.24 1.13-.56 1.62-.94l2.39.96c.23.09.49 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.02-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"></path></svg></button></div><div id="requestList" class="request-list"></div></section>
   </main>
 
   <dialog id="loginDialog">
@@ -131,7 +101,6 @@
   </dialog>
   <div class="profile-menu" id="profileMenu" hidden><button type="button" id="openMemberManager">멤버 관리</button><button type="button" id="openSettings">설정</button><button type="button" id="adminLogout">로그아웃</button></div>
   <dialog id="settingsDialog" class="settings-dialog"><form method="dialog" id="settingsForm"><button class="dialog-close" value="cancel" aria-label="닫기">×</button><span class="tiny-label">SETTINGS</span><h2>사이트 설정</h2><label>상단 이미지 URL<input id="profileImageUrl" type="url" placeholder="https://..."></label><fieldset class="schedule-type-settings"><legend>일정 유형과 색상</legend><div id="scheduleTypeList" class="schedule-type-list"></div><button type="button" class="type-add-btn" id="scheduleTypeAdd">＋ 유형 추가</button></fieldset><button class="save-btn" value="default">설정 저장</button></form></dialog>
-  <dialog id="contentDialog" class="content-dialog"><form method="dialog" id="contentForm"><button class="dialog-close" value="cancel" aria-label="닫기">×</button><span class="tiny-label">ROW MANAGER</span><h2 id="contentDialogTitle">행 추가</h2><input id="contentEditId" type="hidden"><label>분류<select id="contentCategory"><option value="쿠폰">쿠폰</option><option value="업보">업보</option></select></label><label>닉네임<input id="contentTitle" type="text" required></label><label id="contentValueLabel">쿠폰<textarea id="contentApplicant" rows="3" required></textarea></label><button class="save-btn" value="default">저장</button></form></dialog>
   <dialog id="requestDialog" class="request-manager-dialog"><div class="request-manager-shell"><button class="dialog-close" type="button" id="requestManagerClose" aria-label="닫기">×</button><div class="request-manager-head"><div><span class="tiny-label">CONTENT MANAGER</span><h2>신청 콘텐츠 관리</h2></div><button type="button" class="request-create-btn" id="requestCreateBtn">콘텐츠 추가</button></div><div id="requestManageList" class="request-manage-list"></div><form id="requestForm" class="request-editor" hidden><input id="requestEditId" type="hidden"><h3 id="requestFormTitle">신청 콘텐츠 추가</h3><label>댓글 링크<input id="requestCommentLink" type="url" placeholder="https://..." required></label><label>마감 날짜 (선택)<input id="requestDeadline" type="date"></label><div class="request-editor-actions"><button type="button" id="requestEditorCancel">취소</button><button type="submit" class="save-btn">저장</button></div></form></div></dialog>
   <dialog id="memberManagerDialog" class="member-manager-dialog">
     <div class="member-manager-shell">
