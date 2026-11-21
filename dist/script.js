@@ -1,4 +1,4 @@
-const NOTICE_BOARD='https://www.sooplive.com/station/natty09/board/122887767';
+const NOTICE_BOARD='https://www.sooplive.com/station/nslah830/board/114425409';
 const LIVE_API='https://live.sooplive.co.kr/afreeca/player_live_api.php';
 const OFFLINE_IMAGE='https://stimg.sooplive.com/NORMAL_BBS/0/28759400/64461790229649438.png';
 const now=new Date();

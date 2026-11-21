@@ -1,5 +1,5 @@
-const API_URL='https://api-channel.sooplive.com/v1.3/channel/natty09/board?bbsNo=122887767&perPage=20&page=1&orderBy=reg_date&field=title%2Ccontents%2Cuser_nick%2Cuser_id';
-const BOARD_URL='https://www.sooplive.com/station/natty09/board/122887767';
+const API_URL='https://api-channel.sooplive.com/v1.3/channel/nslah830/board?bbsNo=114425409&perPage=20&page=1&orderBy=reg_date&field=title%2Ccontents%2Cuser_nick%2Cuser_id';
+const BOARD_URL='https://www.sooplive.com/station/nslah830/board/114425409';
 const clean=value=>String(value||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;|&#160;/g,' ').replace(/&amp;/g,'&').replace(/\s+/g,' ').trim();
 module.exports=async function handler(req,res){
   res.setHeader('Cache-Control','s-maxage=60, stale-while-revalidate=180');
@@ -20,7 +20,7 @@ module.exports=async function handler(req,res){
       likeCount:Number(row.count?.likeCnt||0),
       commentCount:Number(row.count?.commentCnt||0),
       viewCount:Number(row.count?.readCnt||0),
-      postUrl:`https://www.sooplive.com/station/natty09/post/${row.titleNo}`
+      postUrl:`https://www.sooplive.com/station/nslah830/post/${row.titleNo}`
     }));
     res.status(200).json({notices,boardUrl:BOARD_URL});
   }catch(error){res.status(502).json({notices:[],error:'SOOP notice unavailable',boardUrl:BOARD_URL})}
