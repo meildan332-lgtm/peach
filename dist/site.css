@@ -575,14 +575,29 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .broadcast-live-info .broadcast-live-title{flex:1 1 auto;min-width:0;margin:0;color:#fff;font-size:15px;text-shadow:0 1px 4px rgba(0,0,0,.75)}
 .broadcast-live-info .broadcast-live-duration{flex:0 0 auto;margin:0;padding:4px 10px;border-radius:8px;background:rgba(0,0,0,.9);color:#fff;font-size:12px;line-height:1.4}
 
-/* 신청한 콘텐츠가 없을 때: 상단 이미지와 오른쪽(오늘 일정+방송 공지) 아래쪽 가로선 맞춤 */
+/* 상단 이미지와 오른쪽 박스 아래쪽 가로선 맞춤: 오늘 일정은 그대로 두고 방송 공지 영역이 남는 높이를 채움 */
 @media(min-width:901px){
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]){align-items:stretch}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-left-stack>.live-card{flex:1 1 auto;aspect-ratio:16/9;height:auto}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card>a{position:absolute;inset:0;height:auto;min-height:0}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card{position:relative}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card img#broadcastImage{height:100%;max-height:none}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack>.notice-card{flex:1 1 auto}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack:not(:has(>.notice-card))>.today-card{flex:1 1 auto;display:flex;flex-direction:column}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack:not(:has(>.notice-card)) .today-card .notice-block{margin-top:auto}
+  .hero-grid{align-items:stretch}
+  .hero-grid .hero-left-stack>.live-card{flex:1 1 auto;aspect-ratio:16/9;height:auto;position:relative}
+  .hero-grid .live-card>a{position:absolute;inset:0;height:auto;min-height:0}
+  .hero-grid .live-card img#broadcastImage{height:100%;max-height:none}
+  .hero-grid .hero-right-stack>.today-card{flex:1 1 auto;display:flex;flex-direction:column;min-height:0!important}
+  .hero-grid .today-card .schedule-list{flex:0 0 auto;margin-bottom:0}
+  .hero-grid .today-card .notice-request-row{flex:1 1 auto;margin-top:22px}
+  .hero-grid .notice-request-row>.notice-block{display:flex;flex-direction:column}
+  .hero-grid .notice-request-row .notice-strip{flex:1 1 auto;align-items:flex-start}
 }
+
+/* 게시판 보기 버튼 제거 */
+.notice-heading .notice-link{display:none!important}
+
+/* 방송 공지(왼쪽) + 신청한 콘텐츠(오른쪽) 반반 */
+.today-card .notice-request-row{display:flex;gap:18px;margin-top:22px;padding-top:20px;border-top:1px solid #f0dfe2}
+.dark-mode .today-card .notice-request-row{border-top-color:#493b3e}
+.today-card .notice-request-row .notice-block{flex:1 1 0;min-width:0;margin:0;padding:0;border:0}
+.notice-request-row>.request-panel{flex:1 1 0;min-width:0;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.notice-request-row .notice-heading,.notice-request-row .ranking-heading{min-height:36px;margin:0 4px 10px;align-items:center}
+.notice-request-row .ranking-heading h2{margin:0;font-size:23px;font-weight:400;color:#2b2123}
+.dark-mode .notice-request-row .ranking-heading h2{color:#f7e6e2}
+.notice-request-row .request-list,.notice-request-row .request-list.has-multiple{grid-template-columns:1fr!important}
+@media(max-width:640px){.today-card .notice-request-row{flex-direction:column}}
