@@ -31,7 +31,7 @@ const REQUEST_POPUP_SKIP_KEY='nyacho-request-popup-skip';
 const isRequestPopupSkipped=()=>{try{return localStorage.getItem(REQUEST_POPUP_SKIP_KEY)===todayKey()}catch{return false}};
 requestPopupSkip.onclick=()=>{try{localStorage.setItem(REQUEST_POPUP_SKIP_KEY,todayKey())}catch{}requestPopup.close()};
 let requestPopupShown=false;requestPanel.hidden=true;
-const requestRankBtn=document.querySelector('#requestRankBtn');requestRankBtn.onclick=()=>{if(requestPanel.hidden||requestPopup.open)return;requestPopup.showModal()};
+const requestRankBtn=document.querySelector('#requestRankBtn')||(()=>{const b=document.createElement('button');b.type='button';b.id='requestRankBtn';b.className='request-rank-btn';b.textContent='UP순위';b.hidden=true;noticeBlock?.querySelector('.notice-heading')?.append(b);return b})();requestRankBtn.onclick=()=>{if(requestPanel.hidden||requestPopup.open)return;requestPopup.showModal()};
 const syncRequestPopup=()=>{if(requestPanel.hidden){if(requestPopup.open)requestPopup.close();return}if(!requestPopupShown&&!requestPopup.open&&!isRequestPopupSkipped()&&!document.querySelector('dialog[open]')){requestPopupShown=true;requestPopup.showModal()}};
 new MutationObserver(syncRequestPopup).observe(requestPanel,{attributes:true,attributeFilter:['hidden']});
 requestPopupClose.onclick=()=>requestPopup.close();requestPopup.addEventListener('click',event=>{if(event.target===requestPopup)requestPopup.close()});heroGrid.append(heroRightStack);
