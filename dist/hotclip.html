@@ -14,11 +14,12 @@
     .hc-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
     .hc-month{display:flex;align-items:center;gap:10px}
     .hc-month h2{margin:0;min-width:130px;text-align:center;font-size:22px;font-weight:900}
-    .hc-month button,.hc-filter button{border:1px solid var(--line);background:transparent;color:inherit;border-radius:12px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer}
+    .hc-month button{border:1px solid var(--line);background:transparent;color:inherit;border-radius:12px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer}
     .hc-month button:disabled{opacity:.35;cursor:default}
-    .hc-filter{display:flex;gap:8px;margin-bottom:18px}
-    .hc-filter button.on{background:var(--yellow);border-color:var(--yellow);color:#fff}
-    .hc-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;margin:0;padding:0;list-style:none}
+    .hc-panel{padding:22px;border-radius:24px;background:color-mix(in srgb,var(--yellow) 8%,var(--cream));border:1px solid color-mix(in srgb,var(--yellow) 22%,var(--line))}
+    .dark-mode .hc-panel{background:#1f2120;border-color:#352a2c}
+    .hc-panel .hc-state{padding:40px 0}
+    .hc-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0;padding:0;list-style:none}
     .hc-item{display:block;width:100%;padding:0;text-align:left;font:inherit;border:1px solid var(--line);border-radius:18px;overflow:hidden;color:inherit;background:color-mix(in srgb,var(--cream) 60%,transparent);cursor:pointer;transition:transform .15s,box-shadow .15s}
     .hc-item:hover,.hc-item:focus-visible{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.14);outline:none}
     .hc-thumb{position:relative;aspect-ratio:16/9;background:#00000018;overflow:hidden}
@@ -45,7 +46,8 @@
     .hc-state{padding:60px 0;text-align:center;color:var(--muted);font-weight:700;line-height:1.7}
     .hc-links{margin-top:24px;display:flex;gap:14px;flex-wrap:wrap;font-size:14px;font-weight:700}
     .hc-links a{color:var(--yellow)}
-    @media(max-width:640px){.hc-list{grid-template-columns:repeat(2,1fr);gap:12px}.hc-title{font-size:14px}.hc-head h1{font-size:24px}}
+    @media(max-width:900px){.hc-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:640px){.hc-panel{padding:12px;border-radius:18px}.hc-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.hc-title{font-size:14px}.hc-head h1{font-size:24px}}
   </style>
   <script>try{if(localStorage.getItem('nyacho-theme')==='dark')document.documentElement.classList.add('pre-dark')}catch(e){}</script>
 </head>
@@ -78,13 +80,10 @@
         <button id="hcNext" aria-label="다음 달">›</button>
       </div>
     </div>
-    <div class="hc-filter" id="hcFilter">
-      <button data-f="all" class="on">전체</button>
-      <button data-f="clip">클립</button>
-      <button data-f="catch">캐치</button>
+    <div class="hc-panel">
+      <ul class="hc-list" id="hcList"></ul>
+      <div class="hc-state" id="hcState">불러오는 중…</div>
     </div>
-    <ul class="hc-list" id="hcList"></ul>
-    <div class="hc-state" id="hcState">불러오는 중…</div>
     <div class="hc-links">
       <a href="https://www.sooplive.com/station/nslah830/vod/clip" target="_blank" rel="noopener">클립 게시판 ↗</a>
       <a href="https://www.sooplive.com/station/nslah830/catch" target="_blank" rel="noopener">캐치 게시판 ↗</a>
@@ -109,7 +108,7 @@
     darkBtn.onclick=function(){setDark(!document.body.classList.contains('dark-mode'))};
 
     var kst=new Date(Date.now()+9*3600*1000),nowKey=kst.toISOString().slice(0,7);
-    var month=nowKey,filter='all',clips=[],cache={};
+    var month=nowKey,clips=[],cache={};
     var list=document.getElementById('hcList'),state=document.getElementById('hcState');
     var title=document.getElementById('hcMonth'),prev=document.getElementById('hcPrev'),next=document.getElementById('hcNext');
 
@@ -136,7 +135,7 @@
     document.getElementById('hcPlayerClose').onclick=closePlayer;
 
     function render(){
-      var rows=clips.filter(function(c){return filter==='all'||c.board===filter});
+      var rows=clips;
       list.replaceChildren();
       rows.forEach(function(c,i){
         var li=document.createElement('li'),b=document.createElement('button');
@@ -177,7 +176,6 @@
 
     prev.onclick=function(){month=shift(month,-1);load()};
     next.onclick=function(){if(month<nowKey){month=shift(month,1);load()}};
-    document.getElementById('hcFilter').onclick=function(e){var b=e.target.closest('button');if(!b)return;filter=b.dataset.f;this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});render()};
     load();
   })();
   </script>
