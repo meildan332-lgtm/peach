@@ -352,3 +352,10 @@ button,button:hover,button:focus,.watch-btn,.watch-btn:hover,.notice-link,.float
 
 /* 배경 오른쪽 장식 아이콘(✿ ✦ ♡) 제거 */
 body:before,.dark-mode:before,.dark-mode body:before{content:none!important;display:none!important}
+
+/* 다크 모드 공지 영역: 분홍 → 다크 그레이 */
+.dark-mode .today-notice{background:#333234!important;border-color:#4c4a4d!important;color:#ececec}
+.dark-mode .today-notice strong,.dark-mode .today-notice .notice-title{color:#ececec}
+.dark-mode .today-notice .notice-link,.dark-mode .notice-heading .notice-link{background:#4a484c;color:#f1eaec;border-color:#4a484c}
+.dark-mode .today-notice .broadcast-notice-card p{color:#c9c4c6}
+.dark-mode .today-notice #noticeContent>strong{color:#b8b3b5!important}
