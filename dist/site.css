@@ -653,3 +653,7 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .request-rank-btn:hover{background:#c91a2e}
 .request-rank-btn[hidden]{display:none}
 .request-rank-btn:focus-visible{outline:2px solid #e5253a;outline-offset:2px}
+/* 모바일: 좋아요 수를 닉네임과 같은 줄(오른쪽 끝)에 배치 */
+@media(max-width:600px){.request-comment-profile{grid-template-columns:auto 42px minmax(0,1fr) auto!important;gap:8px!important}.request-comment-likes{grid-column:auto!important;justify-self:end!important;min-width:0;padding:0 9px}.request-comment-author{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+/* 모바일 주간: 뱅온 시간/휴방 배지를 요일 밑으로 */
+.calendar-grid.weekly-grid .week-date .day-badge{align-self:center;justify-content:center;padding:0;margin-top:2px;font-size:13px;line-height:1.2;color:inherit!important}
