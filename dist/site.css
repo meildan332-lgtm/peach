@@ -582,6 +582,7 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
   .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card>a{position:absolute;inset:0;height:auto;min-height:0}
   .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card{position:relative}
   .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .live-card img#broadcastImage{height:100%;max-height:none}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack>.today-card{flex:1 1 auto;display:flex;flex-direction:column}
-  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .today-card .notice-block{margin-top:auto}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack>.notice-card{flex:1 1 auto}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack:not(:has(>.notice-card))>.today-card{flex:1 1 auto;display:flex;flex-direction:column}
+  .hero-grid:has(.hero-right-stack>.request-panel[hidden]) .hero-right-stack:not(:has(>.notice-card)) .today-card .notice-block{margin-top:auto}
 }
