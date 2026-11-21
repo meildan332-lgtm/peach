@@ -314,7 +314,7 @@ a.detail-member-profile:hover img,a.detail-member-profile:focus-visible img{tran
    peach-theme.css  — 분홍 빨강(포인트) + 복숭아/매화 톤
    캐릭터 이미지(흰 머리, 붉은 눈, 흰 매화, 단청 배경)에 맞춘 팔레트
    ========================================================================== */
-:root{--yellow:#ff6384;--poster-yellow:#ff6384;--peach:#ffb89c;--peach-soft:#ffe6dc;--blossom:#fff4f0;--plum-ink:#2b1f23;--pink:#ffb89c;--black:#2b1f23}
+:root{--yellow:#ff6384;--poster-yellow:#ff6384;--peach:#ffb89c;--peach-soft:#ffe6dc;--blue:#ffb89c;--pink:#c9c4c5;--personal:#ffb3c6;--blossom:#fff4f0;--plum-ink:#2b1f23;--black:#2b1f23}
 body{background-color:#fbeee8;background-image:radial-gradient(circle at 12% 0,rgba(255,184,156,.35),transparent 42%),radial-gradient(circle at 92% 18%,rgba(255,99,132,.14),transparent 38%),linear-gradient(rgba(120,50,60,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,50,60,.045) 1px,transparent 1px);background-size:auto,auto,36px 36px,36px 36px;background-attachment:fixed,fixed,scroll,scroll}
 body:before{color:#f2c3bd}
 .topbar{border-bottom-color:var(--yellow)}
@@ -329,3 +329,18 @@ body:before{color:#f2c3bd}
 .dark-mode body:before,.dark-mode:before{color:#3d2a2f}
 .dark-mode .today-notice{background:var(--yellow)!important}
 ::selection{background:#ffc2d0;color:#2b1f23}
+
+/* 일정 유형 색: 개인=연분홍, 합방=복숭아, 휴방=회색 */
+.tag.personal,.event.personal,.dot.yellow{background:#ffb3c6}
+.tag.work,.event.work,.dot.blue{background:#ffb89c}
+.tag.live,.event.live,.dot.pink{background:#c9c4c5}
+.today-event{border-left-color:#ffb3c6}
+.today-event.work{border-left-color:#ffb89c!important}.today-event.live{border-left-color:#c9c4c5!important}
+.day-schedule-card.work{border-left-color:#ffb89c}.day-schedule-card.live{border-left-color:#c9c4c5}
+
+/* 오늘 날짜 표시: 분홍 배경 + 흰 글씨 */
+.day.today .number,.dark-mode .day.today .number{background:#ff6384;color:#fff;border-radius:999px;min-width:34px;height:34px;width:auto;padding:0 8px;display:inline-grid;place-items:center;box-shadow:0 4px 10px rgba(255,99,132,.35);margin:0!important}
+@media(max-width:640px){
+.calendar-grid.weekly-grid .day.today .week-date,.calendar-grid.weekly-grid .day.today .week-date.week-day-0,.calendar-grid.weekly-grid .day.today .week-date.week-day-6{background:#ff6384!important;color:#fff!important}
+.calendar-grid.weekly-grid .day.today .number{background:transparent;color:#fff;box-shadow:none;min-width:0;height:auto;padding:0}
+}

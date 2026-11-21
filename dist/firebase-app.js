@@ -1,18 +1,16 @@
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import{getAuth,GoogleAuthProvider,signInWithPopup,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence,browserSessionPersistence}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserLocalPersistence,browserSessionPersistence}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import{getFirestore,doc,setDoc,onSnapshot,collection,getDocs,getDoc,writeBatch}from'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
 const firebaseConfig={apiKey:'AIzaSyAmBmSFCgaFd-yE2vsLItLWKtU0Z8U_bSg',authDomain:'nyachyo-97f7d.firebaseapp.com',projectId:'nyachyo-97f7d',storageBucket:'nyachyo-97f7d.firebasestorage.app',messagingSenderId:'892799826403',appId:'1:892799826403:web:efbffa3ff82921746c88d6',measurementId:'G-5WYFR3YCLB'};
 const ADMIN_EMAILS=new Set(['natty09@gmail.com','nyachyo29@gmail.com','rnskrns@gmail.com']);
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),provider=new GoogleAuthProvider();
-provider.setCustomParameters({prompt:'select_account'});
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
 const errorText=document.querySelector('#loginError'),rememberInput=document.querySelector('#rememberLogin');
 
 const normalizeEmail=value=>{const login=String(value||'').trim().toLowerCase();return login.includes('@')?login:`${login}@gmail.com`};
 const ensureAdmin=async user=>{if(ADMIN_EMAILS.has(user?.email?.toLowerCase()||''))return user;await signOut(auth);const error=new Error('관리자로 등록된 계정이 아닙니다.');error.code='auth/not-admin';throw error};
 const authErrorMessage=error=>{if(error.code==='auth/not-admin')return'관리자로 등록된 계정이 아닙니다.';if(error.code==='auth/unauthorized-domain')return'현재 주소가 Firebase 승인 도메인에 등록되지 않았습니다.';if(error.code==='auth/popup-blocked')return'브라우저에서 로그인 팝업을 허용해 주세요.';if(error.code==='auth/popup-closed-by-user')return'Google 로그인 창이 닫혔습니다.';if(['auth/invalid-credential','auth/user-not-found','auth/wrong-password','auth/invalid-login-credentials'].includes(error.code))return'아이디 또는 비밀번호가 올바르지 않습니다.';if(error.code==='auth/operation-not-allowed')return'Firebase Authentication에서 해당 로그인 방식을 활성화해 주세요.';if(error.code==='auth/too-many-requests')return'로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.';return`로그인에 실패했습니다. (${error.code||'unknown'})`};
 window.nyachoFirebasePasswordLogin=async(id,password,remember)=>{const email=normalizeEmail(id);if(!id||!password)throw new Error('아이디와 비밀번호를 입력해 주세요.');localStorage.setItem('nyacho-auth-remember',String(remember));try{await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);const result=await signInWithEmailAndPassword(auth,email,password);await ensureAdmin(result.user);return result.user}catch(error){const wrapped=new Error(authErrorMessage(error));wrapped.code=error.code;throw wrapped}};
-document.querySelector('#googleLoginBtn').onclick=async()=>{errorText.textContent='';if(location.hostname==='127.0.0.1'){location.hostname='localhost';return}const remember=rememberInput.checked;localStorage.setItem('nyacho-auth-remember',String(remember));try{await setPersistence(auth,remember?browserLocalPersistence:browserSessionPersistence);const result=await signInWithPopup(auth,provider);await ensureAdmin(result.user);document.querySelector('#loginDialog').close()}catch(error){errorText.textContent=authErrorMessage(error)}};
 window.nyachoFirebaseSignOut=()=>signOut(auth).catch(()=>{});
 window.nyachoGetFirebaseToken=()=>auth.currentUser?.getIdToken(false)||Promise.resolve('');
 // Store all site data as JSON text.  Firestore then only receives primitive fields,
