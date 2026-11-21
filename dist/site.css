@@ -330,13 +330,11 @@ body:before{color:#f2c3bd}
 .dark-mode .today-notice{background:var(--yellow)!important}
 ::selection{background:#ffc2d0;color:#2b1f23}
 
-/* 일정 유형 색: 개인=연분홍, 합방=복숭아, 휴방=회색 */
-.tag.personal,.event.personal,.dot.yellow{background:#ffb3c6}
-.tag.work,.event.work,.dot.blue{background:#ffb89c}
-.tag.live,.event.live,.dot.pink{background:#c9c4c5}
-.today-event{border-left-color:#ffb3c6}
-.today-event.work{border-left-color:#ffb89c!important}.today-event.live{border-left-color:#c9c4c5!important}
-.day-schedule-card.work{border-left-color:#ffb89c}.day-schedule-card.live{border-left-color:#c9c4c5}
+/* 일정 유형 색: 기본값은 개인=연분홍, 합방=복숭아, 휴방=회색. 사이트 설정에서 바꾸면 --type-* 값이 갱신됩니다. */
+:root{--type-personal:#ffb3c6;--type-work:#ffb89c;--type-live:#c9c4c5}
+.tag.personal,.event.personal,.dot.yellow{background:var(--type-personal)}
+.tag.work,.event.work,.dot.blue{background:var(--type-work)}
+.tag.live,.event.live,.dot.pink{background:var(--type-live)}
 
 /* 오늘 날짜 표시: 분홍 배경 + 흰 글씨 */
 .day.today .number,.dark-mode .day.today .number{background:#ff6384;color:#fff;border-radius:999px;min-width:34px;height:34px;width:auto;padding:0 8px;display:inline-grid;place-items:center;box-shadow:0 4px 10px rgba(255,99,132,.35);margin:0!important}

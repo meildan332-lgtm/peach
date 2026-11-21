@@ -23,7 +23,9 @@ let manageDate='';
 const seed={};
 let custom=JSON.parse(localStorage.getItem('nyacho-events')||'{}');
 const key=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-const savedSettings=JSON.parse(localStorage.getItem('nyacho-settings')||'{}');
+// 예전 기본 색(노랑/하늘색/분홍)으로 저장된 일정 유형 색을 새 기본 색으로 옮깁니다. 직접 고른 다른 색은 그대로 둡니다.
+window.nyachoMigrateSettings=settings=>{const LEGACY={personal:['#ffd83d','#ffc83d','#ffd84a','#ff6384'],work:['#a9d9f7'],live:['#ffb4cb']},NEXT={personal:'#ffb3c6',work:'#ffb89c',live:'#c9c4c5'};const fix=(id,color)=>LEGACY[id]&&LEGACY[id].includes(String(color||'').toLowerCase())?NEXT[id]:color;const next={...(settings||{})};['personal','work','live'].forEach(id=>{if(next[id+'Color'])next[id+'Color']=fix(id,next[id+'Color'])});if(Array.isArray(next.scheduleTypes))next.scheduleTypes=next.scheduleTypes.map(type=>({...type,color:fix(type.id,type.color)}));return next};
+const savedSettings=(()=>{const raw=JSON.parse(localStorage.getItem('nyacho-settings')||'{}'),fixed=window.nyachoMigrateSettings(raw);if(JSON.stringify(raw)!==JSON.stringify(fixed))localStorage.setItem('nyacho-settings',JSON.stringify(fixed));return fixed})();
 const scheduleTypes=Array.isArray(savedSettings.scheduleTypes)&&savedSettings.scheduleTypes.length?savedSettings.scheduleTypes:[{id:'personal',label:savedSettings.personalLabel||'개인',color:savedSettings.personalColor||'#ffb3c6'},{id:'work',label:savedSettings.workLabel||'합방',color:savedSettings.workColor||'#ffb89c'},{id:'live',label:savedSettings.liveLabel||'휴방',color:savedSettings.liveColor||'#c9c4c5'}];
 const typeLabel=Object.fromEntries(scheduleTypes.map(type=>[type.id,type.label]));
 const typeColor=Object.fromEntries(scheduleTypes.map(type=>[type.id,type.color]));
@@ -192,5 +194,7 @@ manageList.onclick=event=>{
 };
 
 window.nyachoSetAdmin=setAdmin;window.nyachoTypeIdFromLabel=label=>scheduleTypes.find(type=>type.label===label)?.id;window.nyachoRenderToday=renderToday;window.addEventListener('nyachoSchedulesRemote',event=>{custom=event.detail||{};localStorage.setItem('nyacho-events',JSON.stringify(custom));render()});
-const legend=document.querySelector('.legend');legend.innerHTML='';scheduleTypes.forEach(type=>{const item=document.createElement('span'),dot=document.createElement('i');dot.className='dot';dot.style.backgroundColor=type.color;item.append(dot,document.createTextNode(type.label));legend.append(item)});
+const buildLegend=()=>{const legend=document.querySelector('.legend');legend.innerHTML='';scheduleTypes.forEach(type=>{const item=document.createElement('span'),dot=document.createElement('i');dot.className='dot';dot.style.backgroundColor=type.color;item.append(dot,document.createTextNode(type.label));legend.append(item)})};buildLegend();
+// 설정에서 일정 유형(이름·색)을 바꾸면 새로고침 없이 달력·오늘 일정·범례에 바로 반영합니다.
+window.nyachoUpdateScheduleTypes=types=>{if(!Array.isArray(types)||!types.length)return;scheduleTypes.splice(0,scheduleTypes.length,...types.map(type=>({...type})));Object.keys(typeColor).forEach(id=>delete typeColor[id]);Object.keys(typeLabel).forEach(id=>delete typeLabel[id]);scheduleTypes.forEach(type=>{typeColor[type.id]=type.color;typeLabel[type.id]=type.label});buildLegend();render();window.nyachoRenderToday?.()};
 setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);render();loadTodayNotice();loadBroadcastStatus();setInterval(loadBroadcastStatus,60000);
