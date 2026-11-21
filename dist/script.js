@@ -36,7 +36,7 @@ const createId=()=>globalThis.crypto?.randomUUID?.()||`event-${Date.now()}-${Mat
 const normalizeEvent=(event,date='')=>[event[0]||'',event[1]||'personal',event[2]||'',event[3]||'',event[4]||'',event[5]||date,event[6]||event[5]||date,event[7]||''];
 
 function setAdmin(value){isAdmin=value;localStorage.removeItem('nyacho-admin');sessionStorage.removeItem('nyacho-admin');localStorage.removeItem('nyacho-admin-token');sessionStorage.removeItem('nyacho-admin-token');document.body.classList.toggle('admin-mode',value);loginBtn.classList.toggle('logged-in',value);loginBtn.title=value?'관리자 메뉴':'관리자 로그인';loginBtn.setAttribute('aria-label',loginBtn.title)}
-function setDark(value){isDark=value;localStorage.setItem('nyacho-theme',value?'dark':'light');document.body.classList.toggle('dark-mode',value);document.querySelector('#siteFavicon').href=value?'nyacho-dark-logo.png':'nyacho-uploaded-logo.png';darkModeBtn.title=value?'라이트모드 켜기':'다크모드 켜기';darkModeBtn.setAttribute('aria-label',darkModeBtn.title)}
+function setDark(value){isDark=value;localStorage.setItem('nyacho-theme',value?'dark':'light');document.body.classList.toggle('dark-mode',value);document.querySelector('#siteFavicon').href=value?'peach_logo.png':'peach_logo.png';darkModeBtn.title=value?'라이트모드 켜기':'다크모드 켜기';darkModeBtn.setAttribute('aria-label',darkModeBtn.title)}
 function buildScheduleDocs(){
   const seen=new Set(),list=[];
   Object.keys(custom).sort().forEach(date=>{(custom[date]||[]).forEach(event=>{
