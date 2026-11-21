@@ -120,7 +120,7 @@ manageBangon.addEventListener('change',commitBangonTime);
 function dayBadgeFor(dateKey){
   const status=dayStatus[dateKey];if(!status)return null;
   const badge=document.createElement('span');
-  if(status.mode==='on'){badge.className='day-badge on';badge.textContent=status.time?formatTime(status.time):'뱅온'}
+  if(status.mode==='on'){if(!status.time)return null;badge.className='day-badge on';badge.textContent=formatTime(status.time)}
   else if(status.mode==='off'){badge.className='day-badge off';badge.textContent=typeLabel.live||'휴방'}
   else return null;
   return badge;
