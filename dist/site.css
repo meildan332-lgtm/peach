@@ -657,3 +657,9 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 @media(max-width:600px){.request-comment-profile{grid-template-columns:auto 42px minmax(0,1fr) auto!important;gap:8px!important}.request-comment-likes{grid-column:auto!important;justify-self:end!important;min-width:0;padding:0 9px}.request-comment-author{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
 /* 모바일 주간: 뱅온 시간/휴방 배지를 요일 밑으로 */
 .calendar-grid.weekly-grid .week-date .day-badge{align-self:center;justify-content:center;padding:0;margin-top:2px;font-size:13px;line-height:1.2;color:inherit!important}
+/* 일정 상세: 멤버 프로필이 시간 칸 아래까지 카드 전체 너비를 쓰도록 */
+.day-schedule-card{column-gap:18px!important;row-gap:0!important}
+.day-schedule-card .day-card-main{display:contents}
+.day-schedule-card .day-card-title-row{grid-column:1;grid-row:1;min-width:0}
+.day-schedule-card time{grid-column:2;grid-row:1}
+.day-schedule-card .day-card-description,.day-schedule-card .detail-member-profiles{grid-column:1/-1}
