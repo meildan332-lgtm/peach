@@ -259,7 +259,7 @@ manageList.onclick=event=>{
   if(action==='delete-simple'){const index=Number(button.closest('.manage-simple-row').dataset.index),oldEvent=(custom[manageDate]||[])[index];removeEventOccurrences(oldEvent,manageDate,index);save();render();renderManager();return}
   if(action==='move-up'||action==='move-down'){const events=custom[manageDate]||[],index=Number(button.closest('.manage-simple-row').dataset.index),nextIndex=index+(action==='move-up'?-1:1);if(nextIndex<0||nextIndex>=events.length)return;[events[index],events[nextIndex]]=[events[nextIndex],events[index]];save();render();renderManager();return}
   const item=button.closest('.manage-item');
-  if(action==='cancel-new'||action==='cancel-edit'){renderManager();return}
+  if(action==='cancel-new'||action==='cancel-edit'){if(!(custom[manageDate]||[]).length){manageDialog.close();return}renderManager();return}
   if(action==='create'){const newEvent=readEditor(item);if(!newEvent)return;addEventToRange(newEvent);save();render();renderManager();return}
   const index=Number(item.dataset.index),events=custom[manageDate]||[],oldEvent=events[index];
   if(action==='update'){const updated=readEditor(item,oldEvent?.[7]||createId());if(!updated)return;updateEventOccurrences(oldEvent,updated,manageDate,index)}
