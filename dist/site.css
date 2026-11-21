@@ -534,3 +534,7 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 
 /* 뱅온 시간 배지: 흰 배경 + 연분홍 외곽선 + 검정 글씨 */
 .day-badge.on,.dark-mode .day-badge.on{background:#fff;border:1px solid #ffb3c6;color:#1f1719}
+
+/* 뱅온 시간: 배경·외곽선 없이 텍스트만 */
+.day-badge.on,.dark-mode .day-badge.on{background:transparent;border:0;padding:2px 0;color:#1f1719}
+.dark-mode .day-badge.on{color:#f3e9eb}
