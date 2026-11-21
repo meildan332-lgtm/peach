@@ -608,3 +608,27 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .notice-card .notice-request-row>.request-panel,.notice-card .request-list{min-width:0;max-width:100%}
 .notice-card .request-list,.notice-card .request-list.has-multiple{grid-template-columns:minmax(0,1fr)!important}
 .notice-card .request-card{min-width:0;max-width:100%;box-sizing:border-box}
+
+
+/* 신청한 콘텐츠 입장 팝업 */
+.request-popup{width:min(520px,92vw);max-height:85vh;padding:0;border:1.5px solid var(--poster-ink);border-radius:24px;background:#fff;color:inherit;box-shadow:8px 8px 0 rgba(51,51,49,.12);overflow:hidden}
+.request-popup::backdrop{background:rgba(20,12,14,.45)}
+.request-popup-shell{position:relative;max-height:85vh;overflow:auto;padding:26px 24px 24px}
+.request-popup-close{position:absolute;top:14px;right:16px;z-index:2;width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:inherit;font-size:26px;line-height:1;cursor:pointer}
+.request-popup-close:hover{background:rgba(0,0,0,.06)}
+.request-popup .request-panel{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.request-popup .ranking-heading{margin:0 40px 14px 4px;min-height:36px;align-items:center}
+.request-popup .ranking-heading h2{margin:0;font-size:23px;font-weight:400;color:#2b2123}
+.request-popup .request-list,.request-popup .request-list.has-multiple{grid-template-columns:minmax(0,1fr)!important}
+.request-popup .request-card{min-width:0;max-width:100%;box-sizing:border-box}
+.dark-mode .request-popup{background:#272021;border-color:#6d575b;box-shadow:8px 8px 0 rgba(255,99,132,.12)}
+.dark-mode .request-popup .ranking-heading h2{color:#f7e6e2}
+.dark-mode .request-popup-close:hover{background:rgba(255,255,255,.1)}
+
+/* 입장 팝업: 댓글 내용 */
+.request-popup .request-comment-text{margin:14px 0 0;padding:0 2px;font-size:15px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:#3a2d30}
+.request-popup .request-comment-text[hidden]{display:none}
+.dark-mode .request-popup .request-comment-text{color:#e8dcdf}
+
+/* 입장 팝업: 댓글 첨부 이미지 */
+.request-popup .request-comment-photo{margin-top:12px;max-height:340px}
