@@ -387,3 +387,44 @@ body:before,.dark-mode:before,.dark-mode body:before{content:none!important;disp
 .week-date.week-day-6{color:#3f86c9}
 .dark-mode .week-date.week-day-0{color:#ef5f82}
 .dark-mode .week-date.week-day-6{color:#4aaee7}
+
+/* 핫클립 뷰: 상단바와 같은 폭(main 폭)의 흰색 패널 */
+html:not([data-view="hotclip"]) #hotclipView{display:none}
+html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-view="hotclip"] .request-panel{display:none!important}
+.hc-panel{margin-top:26px;padding:28px;border:1px solid #efd0c9;border-radius:24px;background:#fff;min-height:60vh}
+.dark-mode .hc-panel{background:#1f2120;border-color:#352a2c}
+.hc-head{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;margin-bottom:22px}
+.hc-head h1{margin:0;font-size:30px;font-weight:900}
+.hc-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.hc-month{display:flex;align-items:center;gap:10px}
+.hc-month h2{margin:0;min-width:130px;text-align:center;font-size:22px;font-weight:900}
+.hc-month button{border:1px solid var(--line);background:transparent;color:inherit;border-radius:12px;padding:8px 14px;font:inherit;font-weight:800;cursor:pointer}
+.hc-month button:disabled{opacity:.35;cursor:default}
+.hc-list{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:0;padding:0;list-style:none}
+.hc-item{display:block;width:100%;padding:0;text-align:left;font:inherit;border:1px solid var(--line);border-radius:18px;overflow:hidden;color:inherit;background:color-mix(in srgb,var(--cream) 60%,transparent);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.hc-item:hover,.hc-item:focus-visible{transform:translateY(-3px);box-shadow:0 12px 28px rgba(0,0,0,.14);outline:none}
+.hc-thumb{position:relative;aspect-ratio:16/9;background:#00000018;overflow:hidden}
+.hc-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.hc-item.vertical .hc-thumb img{object-fit:contain;background:#111}
+.hc-rank{position:absolute;left:8px;top:8px;min-width:32px;padding:3px 9px;border-radius:999px;background:#000a;color:#fff;font-size:14px;font-weight:900;text-align:center}
+.hc-item.top .hc-rank{background:var(--yellow)}
+.hc-badge{position:absolute;right:8px;top:8px;padding:2px 8px;border-radius:999px;background:#000a;color:#fff;font-size:12px;font-weight:800}
+.hc-dur{position:absolute;right:8px;bottom:8px;padding:1px 6px;border-radius:6px;background:#000b;color:#fff;font-size:12px;font-weight:700}
+.hc-body{padding:12px 14px 14px}
+.hc-title{margin:0 0 8px;font-size:15px;font-weight:800;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.8em}
+.hc-meta{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--muted);font-size:13px;font-weight:700}
+.hc-meta .views{color:var(--yellow)}
+.hc-dialog{border:0;padding:0;background:transparent;max-width:min(960px,96vw);width:100%;overflow:visible}
+.hc-dialog::backdrop{background:rgba(0,0,0,.72)}
+.hc-player-shell{position:relative;background:#0e0e0e;border-radius:18px;padding:16px;color:#fff}
+.hc-player-close{position:absolute;right:10px;top:8px;border:0;background:transparent;color:#fff;font-size:30px;line-height:1;cursor:pointer}
+.hc-player-title{margin:0 40px 12px 0;font-size:17px;font-weight:800;line-height:1.4}
+.hc-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;margin:0 auto}
+.hc-frame.vertical{aspect-ratio:9/16;height:min(78vh,720px);width:auto;max-width:100%}
+.hc-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hc-player-foot{margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;font-weight:700;color:#cfcfcf}
+.hc-player-foot a{color:#ff8da6}
+.hc-state{padding:60px 0;text-align:center;color:var(--muted);font-weight:700;line-height:1.7}
+@media(max-width:640px){.hc-panel{padding:12px;border-radius:18px}.hc-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.hc-title{font-size:14px}.hc-head h1{font-size:24px}}
+@media(max-width:900px){.hc-list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:640px){.hc-panel{padding:14px;border-radius:18px}.hc-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.hc-title{font-size:14px}.hc-head h1{font-size:24px}}

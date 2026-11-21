@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20261122a" />
+  <link rel="stylesheet" href="site.css?v=20261122b" />
   <script>
-    (function(){var h=location.hash.replace('#','').toLowerCase(),v=h==='backlog'?'content':h==='schedule'?'schedule':null;if(!v){try{v=sessionStorage.getItem('nyacho-view')==='content'?'content':'schedule'}catch(e){v='schedule'}}document.documentElement.dataset.view=v})();
+    (function(){var h=location.hash.replace('#','').toLowerCase(),v=h==='backlog'?'content':h==='schedule'?'schedule':h==='hotclip'?'hotclip':null;if(!v){try{v=sessionStorage.getItem('nyacho-view')==='content'?'content':'schedule'}catch(e){v='schedule'}}document.documentElement.dataset.view=v})();
   </script>
 </head>
 <body>
@@ -24,7 +24,7 @@
     </a>
     <nav aria-label="주요 메뉴" class="top-tabs">
       <a class="active" href="#schedule" data-view="schedule">일정표</a>
-      <a href="hotclip.html" class="hotclip-tab">핫클립</a>
+      <a href="#hotclip" data-view="hotclip">핫클립</a>
     </nav>
     <script>(function(){var v=document.documentElement.dataset.view;document.querySelectorAll('.top-tabs a').forEach(function(a){a.classList.toggle('active',a.dataset.view===v)})})();</script>
     <div class="header-actions">
@@ -72,6 +72,20 @@
       </div>
     </section>
     <section class="ranking-panel request-panel"><div class="ranking-heading"><div><h2>신청한 콘텐츠</h2></div><button type="button" class="request-add admin-only" id="requestAddBtn" aria-label="신청 콘텐츠 관리"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.07-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.12 7.12 0 0 0-1.62-.94L14.38 2.8a.49.49 0 0 0-.49-.4h-3.84a.49.49 0 0 0-.49.4L9.2 5.32c-.59.24-1.13.56-1.62.94L5.19 5.3a.49.49 0 0 0-.61.22L2.66 8.84a.49.49 0 0 0 .12.64l2.03 1.58c-.05.31-.08.65-.08.94s.03.63.08.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.12.22.38.31.61.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.52c.04.24.24.4.49.4h3.84c.25 0 .45-.16.49-.4l.36-2.52c.59-.24 1.13-.56 1.62-.94l2.39.96c.23.09.49 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.02-1.58ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z"></path></svg></button></div><div id="requestList" class="request-list"></div></section>
+    <section class="hotclip-section" id="hotclipView">
+      <div class="hc-panel">
+        <div class="hc-head">
+          <div><h1>🔥 핫클립</h1><p>클립 · 캐치 게시판에서 조회수가 높은 순서예요. 클릭하면 여기서 바로 재생돼요.</p></div>
+          <div class="hc-month">
+            <button id="hcPrev" aria-label="이전 달">‹</button>
+            <h2 id="hcMonth"></h2>
+            <button id="hcNext" aria-label="다음 달">›</button>
+          </div>
+        </div>
+        <ul class="hc-list" id="hcList"></ul>
+        <div class="hc-state" id="hcState">불러오는 중…</div>
+      </div>
+    </section>
   </main>
 
   <dialog id="loginDialog">
@@ -125,9 +139,17 @@
       </div>
     </div>
   </dialog>
-  <script src="script.js?v=20261122a"></script>
-  <script src="features.js?v=20261122a"></script>
-  <script src="members.js?v=20261122a"></script>
-  <script type="module" src="firebase-app.js?v=20261122a"></script>
+  <dialog id="hcPlayer" class="hc-dialog">
+    <div class="hc-player-shell">
+      <button type="button" class="hc-player-close" id="hcPlayerClose" aria-label="닫기">×</button>
+      <h3 class="hc-player-title" id="hcPlayerTitle"></h3>
+      <div class="hc-frame" id="hcFrame"></div>
+      <div class="hc-player-foot"><span id="hcPlayerMeta"></span><a id="hcPlayerLink" href="#" target="_blank" rel="noopener">SOOP에서 보기 ↗</a></div>
+    </div>
+  </dialog>
+  <script src="script.js?v=20261122b"></script>
+  <script src="features.js?v=20261122b"></script>
+  <script src="members.js?v=20261122b"></script>
+  <script type="module" src="firebase-app.js?v=20261122b"></script>
 </body>
 </html>

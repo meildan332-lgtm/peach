@@ -198,3 +198,89 @@ const buildLegend=()=>{const legend=document.querySelector('.legend');legend.inn
 // 설정에서 일정 유형(이름·색)을 바꾸면 새로고침 없이 달력·오늘 일정·범례에 바로 반영합니다.
 window.nyachoUpdateScheduleTypes=types=>{if(!Array.isArray(types)||!types.length)return;scheduleTypes.splice(0,scheduleTypes.length,...types.map(type=>({...type})));Object.keys(typeColor).forEach(id=>delete typeColor[id]);Object.keys(typeLabel).forEach(id=>delete typeLabel[id]);scheduleTypes.forEach(type=>{typeColor[type.id]=type.color;typeLabel[type.id]=type.label});buildLegend();render();window.nyachoRenderToday?.()};
 setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);render();loadTodayNotice();loadBroadcastStatus();setInterval(loadBroadcastStatus,60000);
+
+/* 핫클립 */
+(function(){
+
+    var kst=new Date(Date.now()+9*3600*1000),nowKey=kst.toISOString().slice(0,7);
+    var month=nowKey,clips=[],cache={};
+    var list=document.getElementById('hcList'),state=document.getElementById('hcState');
+    var title=document.getElementById('hcMonth'),prev=document.getElementById('hcPrev'),next=document.getElementById('hcNext');
+
+    function shift(key,d){var p=key.split('-').map(Number),dt=new Date(Date.UTC(p[0],p[1]-1+d,1));return dt.toISOString().slice(0,7)}
+    function fmtDur(s){if(!s)return'';var m=Math.floor(s/60),sec=s%60;return m+':'+String(sec).padStart(2,'0')}
+    function fmtDate(d){return d?d.slice(0,10).replace(/-/g,'.'):''}
+
+    var player=document.getElementById('hcPlayer'),frame=document.getElementById('hcFrame');
+    function openPlayer(c){
+      var vertical=c.board==='catch';
+      frame.className='hc-frame'+(vertical?' vertical':'');
+      var f=document.createElement('iframe');
+      f.src='https://vod.sooplive.com/player/'+encodeURIComponent(c.id)+'/embed?showChat=false&autoPlay=true&mutePlay=false';
+      f.allow='autoplay; fullscreen; encrypted-media';f.allowFullscreen=true;f.referrerPolicy='strict-origin-when-cross-origin';
+      frame.replaceChildren(f);
+      document.getElementById('hcPlayerTitle').textContent=c.title;
+      document.getElementById('hcPlayerMeta').textContent=c.boardLabel+' · 조회 '+c.views.toLocaleString('ko-KR')+' · '+fmtDate(c.date);
+      document.getElementById('hcPlayerLink').href=c.url;
+      player.showModal();
+    }
+    function closePlayer(){player.close()}
+    player.addEventListener('close',function(){frame.replaceChildren()});
+    player.addEventListener('click',function(e){if(e.target===player)closePlayer()});
+    document.getElementById('hcPlayerClose').onclick=closePlayer;
+
+    function render(){
+      var rows=clips;
+      list.replaceChildren();
+      rows.forEach(function(c,i){
+        var li=document.createElement('li'),b=document.createElement('button');
+        b.type='button';b.className='hc-item'+(i<3?' top':'')+(c.board==='catch'?' vertical':'');
+        b.setAttribute('aria-label',c.title+' 재생');
+        var th=document.createElement('div');th.className='hc-thumb';
+        if(c.thumbnail){var img=document.createElement('img');img.src=c.thumbnail;img.alt='';img.loading='lazy';img.referrerPolicy='no-referrer';th.append(img)}
+        var rank=document.createElement('span');rank.className='hc-rank';rank.textContent=(i+1)+'위';th.append(rank);
+        var badge=document.createElement('span');badge.className='hc-badge';badge.textContent=c.boardLabel;th.append(badge);
+        if(c.duration){var d=document.createElement('span');d.className='hc-dur';d.textContent=fmtDur(c.duration);th.append(d)}
+        var body=document.createElement('div');body.className='hc-body';
+        var h=document.createElement('h3');h.className='hc-title';h.textContent=c.title;
+        var meta=document.createElement('div');meta.className='hc-meta';
+        var v=document.createElement('span');v.className='views';v.textContent='조회 '+c.views.toLocaleString('ko-KR');meta.append(v);
+        if(c.likes){var l=document.createElement('span');l.textContent='♡ '+c.likes.toLocaleString('ko-KR');meta.append(l)}
+        var dt=document.createElement('span');dt.textContent=fmtDate(c.date);meta.append(dt);
+        body.append(h,meta);b.append(th,body);b.onclick=function(){openPlayer(c)};li.append(b);list.append(li);
+      });
+      state.hidden=rows.length>0;
+      if(!rows.length)state.textContent='이 달에 올라온 클립이 없어요.';
+    }
+
+    function load(){
+      var p=month.split('-');title.textContent=p[0]+'년 '+Number(p[1])+'월';
+      next.disabled=month>=nowKey;
+      list.replaceChildren();state.hidden=false;state.textContent='불러오는 중…';
+      if(cache[month]){clips=cache[month];render();return}
+      var asked=month;
+      fetch('/api/soop-hotclips?month='+month,{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('request failed');return r.json()}).then(function(data){
+        if(asked!==month)return;
+        clips=data.clips||[];
+        var failed=Object.keys(data.errors||{});
+        if(!clips.length&&failed.length){state.hidden=false;state.textContent='SOOP에서 클립 목록을 가져오지 못했어요. 잠시 후 다시 시도해 주세요.';return}
+        cache[month]=clips;render();
+        if(failed.length){state.hidden=false;state.textContent=failed.join(', ')+' 게시판은 불러오지 못했어요.'}
+      }).catch(function(){if(asked!==month)return;state.hidden=false;state.textContent='클립 목록을 불러오지 못했어요. 잠시 후 다시 시도해 주세요.'});
+    }
+
+    prev.onclick=function(){month=shift(month,-1);load()};
+    next.onclick=function(){if(month<nowKey){month=shift(month,1);load()}};
+    
+    var loaded=false;
+    function applyView(scroll){
+      var hash=location.hash.replace('#','').toLowerCase(),view=hash==='hotclip'?'hotclip':hash==='backlog'?'content':'schedule';
+      document.documentElement.dataset.view=view;
+      document.querySelectorAll('.top-tabs a').forEach(function(a){a.classList.toggle('active',a.dataset.view===view)});
+      if(view==='hotclip'&&!loaded){loaded=true;load()}
+      if(scroll)window.scrollTo(0,0);
+    }
+    window.addEventListener('hashchange',function(){applyView(true)});
+    applyView(false);
+
+})();
