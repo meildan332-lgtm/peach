@@ -515,3 +515,19 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .dark-mode .settings-tabs button.active{color:#211b1c}
 .dark-mode .settings-hint{color:#aaa}
 @media(max-width:700px){.settings-layout{grid-template-columns:1fr}.settings-tabs{flex-direction:row;overflow-x:auto}.settings-tabs button{flex:0 0 auto;font-size:16px;padding:10px 13px;white-space:nowrap}.request-setting-row{grid-template-columns:minmax(0,1fr) 38px}.request-setting-row .request-deadline-input{grid-column:1;grid-row:2}}
+
+/* ===== 방송 공지 카드: 분홍 외곽선 제거 ===== */
+.today-notice,.dark-mode .today-notice{border:0!important}
+
+/* ===== 오늘 일정: 카드 대신 유형 색 점 + 제목 ===== */
+.schedule-list:not(.empty-schedule){gap:6px}
+.today-event,.dark-mode .today-event,.today-event.work,.today-event.live{background:transparent!important;border:0!important;border-radius:12px!important;box-shadow:none!important;padding:10px 6px!important;color:#261e1f}
+.dark-mode .today-event{color:#f4e2dd}
+.today-event:hover{background:rgba(255,99,132,.07)!important}
+.today-event-title-row{display:flex;align-items:flex-start;gap:10px}
+.today-type-dot{flex:0 0 auto;width:12px;height:12px;margin-top:11px;border-radius:50%;box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+.dark-mode .today-type-dot{box-shadow:0 0 0 3px rgba(255,255,255,.1)}
+.today-event-description,.today-event-member-text{padding-left:22px}
+.today-event time,.dark-mode .today-event time{color:inherit}
+.today-event-description,.today-event-member-text{color:rgba(38,30,31,.72)!important}
+.dark-mode .today-event-description,.dark-mode .today-event-member-text{color:#b8aeb0!important}
