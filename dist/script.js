@@ -22,6 +22,8 @@ let isDark=localStorage.getItem('nyacho-theme')==='dark';
 let manageDate='';
 const seed={};
 let custom=JSON.parse(localStorage.getItem('nyacho-events')||'{}');
+// 날짜별 방송 상태: { '2026-11-22': {mode:'on', time:'20:00'} | {mode:'off'} }
+let dayStatus=(()=>{try{return JSON.parse(localStorage.getItem('nyacho-daystatus')||'{}')||{}}catch{return{}}})();
 const key=(y,m,d)=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 // 예전 기본 색(노랑/하늘색/분홍)으로 저장된 일정 유형 색을 새 기본 색으로 옮깁니다. 직접 고른 다른 색은 그대로 둡니다.
 window.nyachoMigrateSettings=settings=>{const LEGACY={personal:['#ffd83d','#ffc83d','#ffd84a','#ff6384'],work:['#a9d9f7'],live:['#ffb4cb']},NEXT={personal:'#ffb3c6',work:'#ffb89c',live:'#c9c4c5'};const fix=(id,color)=>LEGACY[id]&&LEGACY[id].includes(String(color||'').toLowerCase())?NEXT[id]:color;const next={...(settings||{})};['personal','work','live'].forEach(id=>{if(next[id+'Color'])next[id+'Color']=fix(id,next[id+'Color'])});if(Array.isArray(next.scheduleTypes))next.scheduleTypes=next.scheduleTypes.map(type=>({...type,color:fix(type.id,type.color)}));return next};
@@ -55,8 +57,8 @@ function save(){localStorage.setItem('nyacho-events',JSON.stringify(custom));win
 /* 최초 1회: 예전 events/calendar 데이터를 scheduleDocs로 옮깁니다 (관리자 로그인 시 자동 실행) */
 window.nyachoImportLegacySchedules=data=>{const migrated={};Object.keys(data||{}).forEach(date=>{migrated[date]=(data[date]||[]).map(event=>{const normalized=normalizeEvent(event,date);if(!normalized[7])normalized[7]=createId();return normalized})});custom=migrated;localStorage.setItem('nyacho-events',JSON.stringify(custom));window.nyachoFirebaseSyncScheduleDocs?.(buildScheduleDocs());render()};
 function dateRange(start,end){if(!start||!end||start>end)return[];const dates=[];let cursor=new Date(`${start}T00:00:00Z`),last=new Date(`${end}T00:00:00Z`);while(cursor<=last){dates.push(cursor.toISOString().slice(0,10));cursor.setUTCDate(cursor.getUTCDate()+1)}return dates}
-function timePickerMarkup(){return`<div class="manual-time-picker" data-period="am"><div class="period-buttons"><button type="button" class="period-button active" data-period="am">오전</button><button type="button" class="period-button" data-period="pm">오후</button></div><div class="time-number-fields"><input class="manage-hour" type="number" inputmode="numeric" min="1" max="12" placeholder="시" aria-label="시"><span>:</span><input class="manage-minute" type="number" inputmode="numeric" min="0" max="59" placeholder="분" aria-label="분"></div></div>`}
-function setPickerTime(item,value){const picker=item.querySelector('.manual-time-picker'),hourInput=item.querySelector('.manage-hour'),minuteInput=item.querySelector('.manage-minute');let period='am';if(value){const [hour,minute]=value.split(':').map(Number);period=hour>=12?'pm':'am';hourInput.value=hour%12||12;minuteInput.value=String(minute).padStart(2,'0')}picker.dataset.period=period;picker.querySelectorAll('.period-button').forEach(button=>button.classList.toggle('active',button.dataset.period===period))}
+function timePickerMarkup(){return`<div class="manual-time-picker" data-period="pm"><div class="period-buttons"><button type="button" class="period-button" data-period="am">오전</button><button type="button" class="period-button active" data-period="pm">오후</button></div><div class="time-number-fields"><input class="manage-hour" type="number" inputmode="numeric" min="1" max="12" placeholder="시" aria-label="시"><span>:</span><input class="manage-minute" type="number" inputmode="numeric" min="0" max="59" placeholder="분" aria-label="분"></div></div>`}
+function setPickerTime(item,value){const picker=item.querySelector('.manual-time-picker'),hourInput=item.querySelector('.manage-hour'),minuteInput=item.querySelector('.manage-minute');let period='pm';if(!value){hourInput.value='';minuteInput.value=''}if(value){const [hour,minute]=value.split(':').map(Number);period=hour>=12?'pm':'am';hourInput.value=hour%12||12;minuteInput.value=String(minute).padStart(2,'0')}picker.dataset.period=period;picker.querySelectorAll('.period-button').forEach(button=>button.classList.toggle('active',button.dataset.period===period))}
 function readPickerTime(item){const hourValue=item.querySelector('.manage-hour').value.trim(),minuteValue=item.querySelector('.manage-minute').value.trim();if(!hourValue&&!minuteValue)return'';const hour=Number(hourValue),minute=minuteValue===''?0:Number(minuteValue);if(!Number.isInteger(hour)||hour<1||hour>12){item.querySelector('.manage-hour').focus();return null}if(!Number.isInteger(minute)||minute<0||minute>59){item.querySelector('.manage-minute').focus();return null}const period=item.querySelector('.manual-time-picker').dataset.period;const hour24=period==='pm'?(hour%12)+12:hour%12;return`${String(hour24).padStart(2,'0')}:${String(minute).padStart(2,'0')}`}
 function addEventToRange(event){dateRange(event[5],event[6]).forEach(date=>{custom[date]=custom[date]||[];custom[date].push([...event])})}
 function removeEventOccurrences(event,date,index){const id=event?.[7];if(id){Object.keys(custom).forEach(dateKey=>{custom[dateKey]=custom[dateKey].filter(item=>item[7]!==id);if(!custom[dateKey].length)delete custom[dateKey]})}else if(custom[date]?.[index]){custom[date].splice(index,1);if(!custom[date].length)delete custom[date]}}
@@ -84,7 +86,45 @@ function showDetail(date){openDay(date)}
 function editorFieldsMarkup(isNew=false){return`<div class="manage-fields"><label>일정 이름<textarea class="manage-name" rows="2" placeholder="무슨 일정인가요? (Enter로 줄바꿈)" required></textarea></label><label>시작 날짜<input class="manage-start-date" type="date" required></label><label>종료 날짜<input class="manage-end-date" type="date" required></label><label class="manage-time-label">시간 (선택)${timePickerMarkup()}</label><label class="manage-type-label">유형<select class="manage-type">${typeOptions()}</select></label><label class="manage-members-label">참여 멤버 (선택)<input class="manage-members" type="text" placeholder="멤버 이름을 입력하세요"></label><label class="manage-description-label">상세 내용 (선택)<textarea class="manage-description" rows="4" placeholder="일정에 대한 상세 내용을 입력하세요"></textarea></label><div class="manage-actions ${isNew?'manage-new-actions':''}"><button type="button" data-action="${isNew?'cancel-new':'cancel-edit'}">취소</button><button type="button" data-action="${isNew?'create':'update'}">저장</button></div></div>`}
 function fillEditor(item,event,date){const [name='',type='personal',time='',description='',members='',startDate='',endDate='']=event;item.querySelector('.manage-name').value=name;item.querySelector('.manage-type').value=type;item.querySelector('.manage-description').value=description;item.querySelector('.manage-members').value=members;item.querySelector('.manage-start-date').value=startDate||date;item.querySelector('.manage-end-date').value=endDate||startDate||date;setPickerTime(item,time)}
 function readEditor(item,id=createId()){const name=item.querySelector('.manage-name').value.trim(),startDate=item.querySelector('.manage-start-date').value,endDate=item.querySelector('.manage-end-date').value,time=readPickerTime(item);if(!name){item.querySelector('.manage-name').focus();return null}if(!startDate){item.querySelector('.manage-start-date').focus();return null}if(!endDate||endDate<startDate){item.querySelector('.manage-end-date').focus();return null}if(time===null)return null;return[name,item.querySelector('.manage-type').value,time,item.querySelector('.manage-description').value.trim(),item.querySelector('.manage-members').value.trim(),startDate,endDate,id]}
+/* ---- 날짜별 뱅온/휴방 상태 ---- */
+const manageBangon=document.querySelector('#manageBangon'),manageBangonPicker=document.querySelector('#manageBangonPicker'),manageMode=document.querySelector('#manageMode');
+manageBangonPicker.innerHTML=timePickerMarkup();
+function saveDayStatus(){localStorage.setItem('nyacho-daystatus',JSON.stringify(dayStatus));window.nyachoFirebaseSave?.('dayStatus',dayStatus)}
+function renderStatusControls(){
+  const status=dayStatus[manageDate];
+  manageMode.querySelectorAll('button').forEach(button=>button.classList.toggle('active',status?.mode===button.dataset.mode));
+  manageBangon.hidden=status?.mode!=='on';
+  setPickerTime(manageBangon,status?.mode==='on'?status.time||'':'');
+}
+function commitBangonTime(){
+  if(!isAdmin||dayStatus[manageDate]?.mode!=='on')return;
+  const time=readPickerTime(manageBangon);if(time===null)return;
+  dayStatus[manageDate]={mode:'on',time};saveDayStatus();render();
+}
+manageMode.onclick=event=>{
+  const button=event.target.closest('button[data-mode]');if(!button||!isAdmin||!manageDate)return;
+  const mode=button.dataset.mode;
+  if(dayStatus[manageDate]?.mode===mode)delete dayStatus[manageDate];
+  else dayStatus[manageDate]=mode==='on'?{mode:'on',time:''}:{mode:'off'};
+  saveDayStatus();renderStatusControls();render();
+};
+manageBangon.addEventListener('click',event=>{
+  const periodButton=event.target.closest('.period-button');if(!periodButton)return;
+  const picker=periodButton.closest('.manual-time-picker');picker.dataset.period=periodButton.dataset.period;
+  picker.querySelectorAll('.period-button').forEach(button=>button.classList.toggle('active',button===periodButton));
+  commitBangonTime();
+});
+manageBangon.addEventListener('change',commitBangonTime);
+function dayBadgeFor(dateKey){
+  const status=dayStatus[dateKey];if(!status)return null;
+  const badge=document.createElement('span');
+  if(status.mode==='on'){badge.className='day-badge on';badge.textContent=status.time?formatTime(status.time):'뱅온'}
+  else if(status.mode==='off'){badge.className='day-badge off';badge.textContent=typeLabel.live||'휴방';badge.style.backgroundColor=typeColor.live||'#c9c4c5'}
+  else return null;
+  return badge;
+}
 function renderManager(){
+  renderStatusControls();
   document.querySelector('#manageDate').textContent=manageDate;document.querySelector('#manageFooter').hidden=false;document.querySelector('#manageAdd').hidden=false;manageList.innerHTML='';const events=custom[manageDate]||[];
   if(!events.length){showNewScheduleEditor();return}
   events.forEach((event,index)=>{const row=document.createElement('div');row.className='manage-simple-row';row.dataset.index=index;row.innerHTML='<span class="manage-simple-title"></span><span class="manage-simple-time"></span><span class="manage-order-buttons"><button type="button" data-action="move-up" aria-label="위로 이동">▲</button><button type="button" data-action="move-down" aria-label="아래로 이동">▼</button></span><button type="button" data-action="edit-simple">수정</button><button type="button" class="danger" data-action="delete-simple">삭제</button>';row.querySelector('.manage-simple-title').textContent=event[0];row.querySelector('.manage-simple-time').textContent=formatTime(event[2]);row.querySelector('[data-action="move-up"]').disabled=index===0;row.querySelector('[data-action="move-down"]').disabled=index===events.length-1;manageList.append(row)});
@@ -101,7 +141,8 @@ function render(){
   else{const first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate(),prevLast=new Date(y,m,0).getDate(),totalCells=Math.max(35,Math.ceil((first+last)/7)*7);for(let i=0;i<totalCells;i++){let d,month=m;if(i<first){d=prevLast-first+i+1;month=m-1}else if(i>=first+last){d=i-first-last+1;month=m+1}else d=i-first+1;dates.push(new Date(y,month,d))}}
   if(weekly){const firstDate=dates[0],lastDate=dates[6];title.textContent=firstDate.getMonth()===lastDate.getMonth()?`${firstDate.getMonth()+1}월 ${firstDate.getDate()} - ${lastDate.getDate()}`:`${firstDate.getMonth()+1}월 ${firstDate.getDate()} - ${lastDate.getMonth()+1}월 ${lastDate.getDate()}`}
   dates.forEach(actual=>{
-    const d=actual.getDate(),muted=actual.getMonth()!==m,dateKey=key(actual.getFullYear(),actual.getMonth(),d),cell=document.createElement('div'),weekday=['일','월','화','수','목','금','토'][actual.getDay()];cell.className='day'+(muted?' muted':'')+(dateKey===TODAY_KEY?' today':'');cell.dataset.date=dateKey;cell.innerHTML=weekly?`<div class="week-date week-day-${actual.getDay()}"><span class="number">${d}</span><span class="mobile-weekday">${weekday}</span></div><div class="events"></div>`:`<span class="number">${d}</span><div class="events"></div>`;
+    const d=actual.getDate(),muted=actual.getMonth()!==m,dateKey=key(actual.getFullYear(),actual.getMonth(),d),cell=document.createElement('div'),weekday=['일','월','화','수','목','금','토'][actual.getDay()];cell.className='day'+(muted?' muted':'')+(dateKey===TODAY_KEY?' today':'');cell.dataset.date=dateKey;cell.innerHTML=weekly?`<div class="week-date week-day-${actual.getDay()}"><span class="number">${d}</span><span class="mobile-weekday">${weekday}</span></div><div class="events"></div>`:`<div class="day-head"><span class="number">${d}</span></div><div class="events"></div>`;
+    {const badge=muted&&!weekly?null:dayBadgeFor(dateKey);if(badge){if(weekly)cell.querySelector('.events').append(badge);else cell.querySelector('.day-head').append(badge)}}
     const all=muted&&!weekly?[]:[...(seed[dateKey]||[]).map(event=>[...normalizeEvent(event,dateKey),false,null]),...(custom[dateKey]||[]).map((event,index)=>[...normalizeEvent(event,dateKey),true,index])];
     all.forEach(event=>{const [name,type,time,description='',members='',startDate='',endDate='',id='',own,eventIndex]=event;const el=document.createElement('div');el.className=`event ${type}${own?' custom':''}`;if(own){el.draggable=true;el.dataset.date=dateKey;el.dataset.index=eventIndex}el.innerHTML=`<span class="event-title"></span>${time?'<span class="event-time"></span>':''}`;el.style.backgroundColor=typeColor[type]||'#ffb3c6';el.querySelector('.event-title').textContent=name;if(time)el.querySelector('.event-time').textContent=formatTime(time);el.title='좌클릭: 이 날짜의 전체 일정'+(isAdmin&&own?' · 우클릭: 일정 관리 · 드래그: 날짜/순서 이동':'');el.onclick=clickEvent=>{clickEvent.stopPropagation();openDay(dateKey)};el.oncontextmenu=contextEvent=>{if(!own||!isAdmin)return;contextEvent.preventDefault();contextEvent.stopPropagation();openManager(dateKey)};cell.querySelector('.events').append(el)});
     cell.onclick=()=>openDay(dateKey);cell.oncontextmenu=contextEvent=>{if(!isAdmin)return;contextEvent.preventDefault();openManager(dateKey)};cell.querySelector('.number').classList.add('date-button');cell.querySelector('.number').onclick=clickEvent=>{clickEvent.stopPropagation();openDay(dateKey)};grid.append(cell);
@@ -193,6 +234,7 @@ manageList.onclick=event=>{
   save();render();renderManager();
 };
 
+window.addEventListener('nyachoDayStatusRemote',event=>{dayStatus=event.detail&&typeof event.detail==='object'?event.detail:{};localStorage.setItem('nyacho-daystatus',JSON.stringify(dayStatus));render();if(manageDialog.open)renderStatusControls()});
 window.nyachoSetAdmin=setAdmin;window.nyachoTypeIdFromLabel=label=>scheduleTypes.find(type=>type.label===label)?.id;window.nyachoRenderToday=renderToday;window.addEventListener('nyachoSchedulesRemote',event=>{custom=event.detail||{};localStorage.setItem('nyacho-events',JSON.stringify(custom));render()});
 const buildLegend=()=>{const legend=document.querySelector('.legend');legend.innerHTML='';scheduleTypes.forEach(type=>{const item=document.createElement('span'),dot=document.createElement('i');dot.className='dot';dot.style.backgroundColor=type.color;item.append(dot,document.createTextNode(type.label));legend.append(item)})};buildLegend();
 // 설정에서 일정 유형(이름·색)을 바꾸면 새로고침 없이 달력·오늘 일정·범례에 바로 반영합니다.

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="site.css?v=20261122b" />
+  <link rel="stylesheet" href="site.css?v=20261122d" />
   <script>
     (function(){var h=location.hash.replace('#','').toLowerCase(),v=h==='backlog'?'content':h==='schedule'?'schedule':h==='hotclip'?'hotclip':null;if(!v){try{v=sessionStorage.getItem('nyacho-view')==='content'?'content':'schedule'}catch(e){v='schedule'}}document.documentElement.dataset.view=v})();
   </script>
@@ -102,7 +102,8 @@
   <dialog id="manageDialog" class="manage-dialog">
     <div class="manage-shell">
       <button class="dialog-close" type="button" id="manageClose" aria-label="닫기">×</button>
-      <span class="tiny-label">SCHEDULE MANAGER</span><h2>일정 관리</h2>
+      <div class="manage-title-row"><h2>일정 관리</h2><div class="manage-mode" id="manageMode"><button type="button" data-mode="on">뱅온</button><button type="button" data-mode="off">휴방</button></div></div>
+      <div class="manage-bangon" id="manageBangon" hidden><span class="manage-bangon-label">뱅온 시간</span><div id="manageBangonPicker"></div></div>
       <p class="manage-date" id="manageDate"></p>
       <div class="manage-list" id="manageList"></div>
       <div class="manage-footer" id="manageFooter">
@@ -147,9 +148,9 @@
       <div class="hc-player-foot"><span id="hcPlayerMeta"></span><a id="hcPlayerLink" href="#" target="_blank" rel="noopener">SOOP에서 보기 ↗</a></div>
     </div>
   </dialog>
-  <script src="script.js?v=20261122b"></script>
-  <script src="features.js?v=20261122b"></script>
-  <script src="members.js?v=20261122b"></script>
-  <script type="module" src="firebase-app.js?v=20261122b"></script>
+  <script src="script.js?v=20261122d"></script>
+  <script src="features.js?v=20261122d"></script>
+  <script src="members.js?v=20261122d"></script>
+  <script type="module" src="firebase-app.js?v=20261122d"></script>
 </body>
 </html>
