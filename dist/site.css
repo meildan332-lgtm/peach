@@ -603,3 +603,8 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .request-card-head>div:first-child{flex:1 1 auto;min-width:0}
 .request-card .request-post-title{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%}
 .request-card-actions{flex:0 0 auto}
+
+/* 신청한 콘텐츠 카드가 박스 밖으로 삐져나오지 않게 */
+.notice-card .notice-request-row>.request-panel,.notice-card .request-list{min-width:0;max-width:100%}
+.notice-card .request-list,.notice-card .request-list.has-multiple{grid-template-columns:minmax(0,1fr)!important}
+.notice-card .request-card{min-width:0;max-width:100%;box-sizing:border-box}
