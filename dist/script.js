@@ -208,7 +208,7 @@ setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);
     var title=document.getElementById('hcMonth'),prev=document.getElementById('hcPrev'),next=document.getElementById('hcNext');
 
     function shift(key,d){var p=key.split('-').map(Number),dt=new Date(Date.UTC(p[0],p[1]-1+d,1));return dt.toISOString().slice(0,7)}
-    function fmtDur(s){if(!s)return'';var m=Math.floor(s/60),sec=s%60;return m+':'+String(sec).padStart(2,'0')}
+    function fmtDur(s){if(!s)return'';var h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60,p=function(n){return String(n).padStart(2,'0')};return h?h+':'+p(m)+':'+p(sec):m+':'+p(sec)}
     function fmtDate(d){return d?d.slice(0,10).replace(/-/g,'.'):''}
 
     var player=document.getElementById('hcPlayer'),frame=document.getElementById('hcFrame');
@@ -220,7 +220,7 @@ setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);
       f.allow='autoplay; fullscreen; encrypted-media';f.allowFullscreen=true;f.referrerPolicy='strict-origin-when-cross-origin';
       frame.replaceChildren(f);
       document.getElementById('hcPlayerTitle').textContent=c.title;
-      document.getElementById('hcPlayerMeta').textContent=c.boardLabel+' · 조회 '+c.views.toLocaleString('ko-KR')+' · '+fmtDate(c.date);
+      document.getElementById('hcPlayerMeta').textContent=c.boardLabel+(c.author?' · by '+c.author:'')+' · 조회 '+c.views.toLocaleString('ko-KR')+' · '+fmtDate(c.date);
       document.getElementById('hcPlayerLink').href=c.url;
       player.showModal();
     }
@@ -243,11 +243,12 @@ setAdmin(isAdmin,localStorage.getItem('nyacho-admin')==='true');setDark(isDark);
         if(c.duration){var d=document.createElement('span');d.className='hc-dur';d.textContent=fmtDur(c.duration);th.append(d)}
         var body=document.createElement('div');body.className='hc-body';
         var h=document.createElement('h3');h.className='hc-title';h.textContent=c.title;
+        var by=null;if(c.author){by=document.createElement('p');by.className='hc-by';by.textContent='by '+c.author}
         var meta=document.createElement('div');meta.className='hc-meta';
         var v=document.createElement('span');v.className='views';v.textContent='조회 '+c.views.toLocaleString('ko-KR');meta.append(v);
         if(c.likes){var l=document.createElement('span');l.textContent='♡ '+c.likes.toLocaleString('ko-KR');meta.append(l)}
         var dt=document.createElement('span');dt.textContent=fmtDate(c.date);meta.append(dt);
-        body.append(h,meta);b.append(th,body);b.onclick=function(){openPlayer(c)};li.append(b);list.append(li);
+        if(by)body.append(h,by,meta);else body.append(h,meta);b.append(th,body);b.onclick=function(){openPlayer(c)};li.append(b);list.append(li);
       });
       state.hidden=rows.length>0;
       if(!rows.length)state.textContent='이 달에 올라온 클립이 없어요.';
