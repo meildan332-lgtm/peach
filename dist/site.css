@@ -531,3 +531,6 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .today-event time,.dark-mode .today-event time{color:inherit}
 .today-event-description,.today-event-member-text{color:rgba(38,30,31,.72)!important}
 .dark-mode .today-event-description,.dark-mode .today-event-member-text{color:#b8aeb0!important}
+
+/* 뱅온 시간 배지: 흰 배경 + 연분홍 외곽선 + 검정 글씨 */
+.day-badge.on,.dark-mode .day-badge.on{background:#fff;border:1px solid #ffb3c6;color:#1f1719}
