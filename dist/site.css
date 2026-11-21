@@ -369,3 +369,14 @@ body:before,.dark-mode:before,.dark-mode body:before{content:none!important;disp
 .today-notice{background:#ffe7ed!important;border-color:#ffb3c6!important}
 .today-notice .broadcast-notice-card+.broadcast-notice-card{border-top-color:#ffc2d0}
 .notice-heading .notice-link{background:#ffd3de}
+
+/* 오늘 날짜: 원형 배지 제거 → 날짜 칸 배경만 아주 연한 분홍, 글씨는 검정 */
+.day.today,.calendar-grid .day.today{background:#fff0f4!important}
+.day.today .number,.dark-mode .day.today .number,.calendar-grid.weekly-grid .day.today .number{background:transparent!important;color:#1f1719!important;border-radius:0;min-width:0;width:auto;height:auto;padding:0;margin:0!important;display:inline;box-shadow:none!important}
+.dark-mode .day.today,.dark-mode .calendar-grid .day.today{background:rgba(255,99,132,.14)!important}
+.dark-mode .day.today .number{color:#f3e9eb!important}
+@media(max-width:640px){
+.calendar-grid.weekly-grid .day.today .week-date,.calendar-grid.weekly-grid .day.today .week-date.week-day-0,.calendar-grid.weekly-grid .day.today .week-date.week-day-6{background:#fff0f4!important;color:#1f1719!important}
+.dark-mode .calendar-grid.weekly-grid .day.today .week-date{background:rgba(255,99,132,.14)!important;color:#f3e9eb!important}
+.calendar-grid.weekly-grid .day.today .number{color:inherit!important}
+}
