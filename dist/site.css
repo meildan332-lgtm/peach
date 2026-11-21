@@ -563,3 +563,8 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .dark-mode .month-picker-grid button.current{border-color:var(--yellow)}
 .dark-mode .month-picker-grid button.active{background:var(--yellow);color:#211b1c}
 .dark-mode .month-picker-today{background:#3f3335;color:#eee}
+
+
+/* 오늘 일정 + 방송 공지: 한 박스 */
+.today-card .notice-block{margin-top:22px;padding-top:20px;border-top:1px solid #f0dfe2}
+.dark-mode .today-card .notice-block{border-top-color:#493b3e}
