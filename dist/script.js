@@ -75,7 +75,7 @@ function renderToday(){
     item.innerHTML=`<div class="today-event-copy"><h3></h3>${description?'<p class="today-event-description"></p>':''}${members?'<div class="today-event-member-profiles"></div>':''}</div>${time?`<time>${formatTime(time)}</time>`:''}`;
     item.style.backgroundColor=typeColor[type]||'#ffb3c6';item.querySelector('h3').textContent=name;
     if(description)item.querySelector('.today-event-description').textContent=description;
-    if(members){const output=item.querySelector('.today-event-member-profiles');const names=(window.nyachoMemberNames?window.nyachoMemberNames(members):String(members).split(',').map(n=>n.trim()).filter(Boolean)).filter(n=>String(n).trim()!=='냐쵸');output.className='today-event-member-text';output.textContent=names.length?`w. ${names.join(', ')}`:''}
+    if(members){const output=item.querySelector('.today-event-member-profiles');const names=(window.nyachoMemberNames?window.nyachoMemberNames(members):String(members).split(',').map(n=>n.trim()).filter(Boolean)).filter(n=>String(n).trim()!=='피치');output.className='today-event-member-text';output.textContent=names.length?`w. ${names.join(', ')}`:''}
     item.onclick=()=>openDay(TODAY_KEY);
     todaySchedule.append(item);
   });

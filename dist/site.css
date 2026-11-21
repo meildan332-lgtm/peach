@@ -455,3 +455,7 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .toast.show{opacity:1;transform:none}
 .toast-success:before{content:'✓';margin-right:9px;color:var(--yellow)}
 .dark-mode .toast{background:#f3eaeb;color:#261e1f}
+
+/* 뱅온/휴방 배지: 날짜 칸 오른쪽 끝 */
+.day-head{justify-content:flex-start}
+.day-head .day-badge{margin-left:auto}
