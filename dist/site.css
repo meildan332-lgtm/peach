@@ -565,9 +565,6 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .dark-mode .month-picker-today{background:#3f3335;color:#eee}
 
 
-/* 오늘 일정 + 방송 공지: 한 박스 */
-.today-card .notice-block{margin-top:22px;padding-top:20px;border-top:1px solid #f0dfe2}
-.dark-mode .today-card .notice-block{border-top-color:#493b3e}
 
 /* 라이브 썸네일: 제목은 왼쪽 아래 텍스트만, 시간은 오른쪽 아래 검정 90% 뱃지 */
 .broadcast-live-info{left:16px;right:16px;bottom:14px;max-width:none;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:0;border-radius:0;background:transparent;backdrop-filter:none;pointer-events:none}
@@ -575,15 +572,15 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .broadcast-live-info .broadcast-live-title{flex:1 1 auto;min-width:0;margin:0;color:#fff;font-size:15px;text-shadow:0 1px 4px rgba(0,0,0,.75)}
 .broadcast-live-info .broadcast-live-duration{flex:0 0 auto;margin:0;padding:4px 10px;border-radius:8px;background:rgba(0,0,0,.9);color:#fff;font-size:12px;line-height:1.4}
 
-/* 상단 이미지와 오른쪽 박스 아래쪽 가로선 맞춤: 오늘 일정은 그대로 두고 방송 공지 영역이 남는 높이를 채움 */
+/* 상단 이미지와 오른쪽 아래 박스(방송 공지) 가로선 맞춤: 오늘 일정은 그대로 두고 공지 박스가 남는 높이를 채움 */
 @media(min-width:901px){
   .hero-grid{align-items:stretch}
   .hero-grid .hero-left-stack>.live-card{flex:1 1 auto;aspect-ratio:16/9;height:auto;position:relative}
   .hero-grid .live-card>a{position:absolute;inset:0;height:auto;min-height:0}
   .hero-grid .live-card img#broadcastImage{height:100%;max-height:none}
-  .hero-grid .hero-right-stack>.today-card{flex:1 1 auto;display:flex;flex-direction:column;min-height:0!important}
-  .hero-grid .today-card .schedule-list{flex:0 0 auto;margin-bottom:0}
-  .hero-grid .today-card .notice-request-row{flex:1 1 auto;margin-top:22px}
+  .hero-grid .hero-right-stack>.today-card{flex:0 0 auto;min-height:0!important}
+  .hero-grid .hero-right-stack>.notice-card{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+  .hero-grid .notice-card>.notice-request-row{flex:1 1 auto}
   .hero-grid .notice-request-row>.notice-block{display:flex;flex-direction:column}
   .hero-grid .notice-request-row .notice-strip{flex:1 1 auto;align-items:flex-start}
 }
@@ -592,12 +589,17 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .notice-heading .notice-link{display:none!important}
 
 /* 방송 공지(위) + 신청한 콘텐츠(아래) 세로 배치 */
-.today-card .notice-request-row{display:flex;flex-direction:column;gap:18px;margin-top:22px;padding-top:20px;border-top:1px solid #f0dfe2}
-.dark-mode .today-card .notice-request-row{border-top-color:#493b3e}
-.today-card .notice-request-row .notice-block{flex:1 1 auto;min-width:0;margin:0;padding:0;border:0}
+.notice-card .notice-request-row{display:flex;flex-direction:column;gap:18px}
+.notice-card .notice-request-row .notice-block{flex:1 1 auto;min-width:0;margin:0;padding:0;border:0}
 .notice-request-row>.request-panel{flex:0 0 auto;min-width:0;margin:0!important;padding:18px 0 0!important;border:0!important;border-top:1px solid #f0dfe2!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
 .notice-request-row .notice-heading,.notice-request-row .ranking-heading{min-height:36px;margin:0 4px 10px;align-items:center}
 .notice-request-row .ranking-heading h2{margin:0;font-size:23px;font-weight:400;color:#2b2123}
 .dark-mode .notice-request-row .ranking-heading h2{color:#f7e6e2}
 .dark-mode .notice-request-row>.request-panel{border-top-color:#493b3e!important}
 .notice-request-row .request-list,.notice-request-row .request-list.has-multiple{grid-template-columns:1fr!important}
+
+/* 신청한 콘텐츠 제목: 한 줄, 길면 ... 처리 */
+.request-card-head{min-width:0}
+.request-card-head>div:first-child{flex:1 1 auto;min-width:0}
+.request-card .request-post-title{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:100%}
+.request-card-actions{flex:0 0 auto}
