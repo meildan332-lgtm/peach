@@ -1,5 +1,5 @@
 // GET /api/soop-hotclips?month=2026-11
-// 냐쵸(nslah830)의 클립(vod/clip) + 캐치(catch) 게시판에서 해당 월에 올라온 영상을 모아 조회수순으로 반환합니다.
+// 냐쵸(nslah830)의 클립(vod/clip) + 캐치(catch) 게시판에서(다시보기 제외) 해당 월에 올라온 영상을 모아 조회수순으로 반환합니다.
 // Vercel 스타일(Node) 함수입니다. 기존 /api/soop-live 와 같은 위치(api/)에 두세요.
 
 const STREAMER = 'nslah830';
@@ -17,9 +17,17 @@ const BOARDS = [
 const num = v => Number(String(v ?? 0).replace(/,/g, '')) || 0;
 const abs = u => (!u ? '' : u.startsWith('//') ? `https:${u}` : u.replace(/^http:/, 'https:'));
 
+// 다시보기(방송 VOD) 판별: 클립/캐치 게시판 응답에 다시보기가 섞여 있어도 걸러냅니다.
+const REVIEW_RE = /review|다시보기|replay/i;
+function isReview(item) {
+  const ucc = item.ucc || {};
+  const fields = [item.type, item.vod_type, item.station_type, item.category, item.board_type, item.file_type, ucc.type, ucc.file_type, ucc.category, ucc.vod_type];
+  return fields.some(v => typeof v === 'string' && REVIEW_RE.test(v));
+}
+
 function normalize(item, board) {
   const id = item.title_no ?? item.titleNo ?? item.id;
-  if (!id) return null;
+  if (!id || isReview(item)) return null;
   const count = item.count || {};
   const ucc = item.ucc || {};
   const date = String(item.reg_date ?? item.regDate ?? item.write_date ?? '');
