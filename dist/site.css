@@ -663,3 +663,12 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .day-schedule-card .day-card-title-row{grid-column:1;grid-row:1;min-width:0}
 .day-schedule-card time{grid-column:2;grid-row:1}
 .day-schedule-card .day-card-description,.day-schedule-card .detail-member-profiles{grid-column:1/-1}
+
+/* ===== 모바일 주간 보기 수정 ===== */
+@media(max-width:640px){
+  /* "11월 N째주" 제목 글자 크기 축소 */
+  .month-title-wrap h2,#monthTitle{font-size:22px!important;min-width:0!important;white-space:nowrap}
+  /* 뱅온 시간이 들어가도 날짜/요일은 제자리, 칸이 아래로 늘어나도록 */
+  .calendar-grid.weekly-grid .week-date{justify-content:flex-start!important;padding-top:26px!important;padding-bottom:14px!important;height:auto!important}
+  .calendar-grid.weekly-grid .day{height:auto!important}
+}
