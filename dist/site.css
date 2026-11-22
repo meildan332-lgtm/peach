@@ -672,3 +672,17 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
   .calendar-grid.weekly-grid .week-date{justify-content:flex-start!important;padding-top:26px!important;padding-bottom:14px!important;height:auto!important}
   .calendar-grid.weekly-grid .day{height:auto!important}
 }
+
+/* ===== 상단 이미지: 호버 시 오른쪽 여백 방지 + 하단 페이지 표시(점) ===== */
+.photo-card:hover .top-slider-track img{transform:none}
+.top-slider{inset:-1px;transition:transform .35s ease;will-change:transform}
+.photo-card:hover .top-slider{transform:scale(1.015)}
+.top-slider-track img{transition:none}
+.top-dots{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:5;display:none;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:rgba(90,90,90,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:opacity .35s ease}
+.photo-card.has-slides:not(.is-live) .top-dots.is-visible{display:flex}
+.photo-card:not(.is-ready) .top-dots{opacity:0}
+.top-dot{width:9px;height:9px;padding:0;border:0;border-radius:999px;background:rgba(255,255,255,.55);cursor:pointer;transition:width .3s ease,background-color .3s ease}
+.top-dot:hover{background:rgba(255,255,255,.85)}
+.top-dot.active{width:28px;background:#fff}
+.top-dot:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:640px){.top-dots{bottom:10px;gap:6px;padding:6px 10px}.top-dot{width:8px;height:8px}.top-dot.active{width:22px}}

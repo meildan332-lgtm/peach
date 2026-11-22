@@ -212,10 +212,11 @@ async function loadBroadcastStatus(){const image=document.querySelector('#broadc
 const topSlider=document.createElement('div');topSlider.className='top-slider';
 document.querySelector('#liveCard>a').prepend(topSlider);
 let topSlideKey='',topSlideTimer=null;
+const liveCardEl=document.querySelector('#liveCard'),topDots=document.createElement('div');topDots.className='top-dots';liveCardEl.append(topDots);
 window.nyachoSetTopImages=(images,seconds)=>{
   const list=(Array.isArray(images)?images:[]).map(url=>String(url||'').trim()).filter(Boolean),sec=Math.min(120,Math.max(2,Number(seconds)||5)),key=JSON.stringify([list,sec]);
   if(key===topSlideKey)return;topSlideKey=key;
-  clearInterval(topSlideTimer);topSlideTimer=null;topSlider.replaceChildren();
+  clearInterval(topSlideTimer);topSlideTimer=null;topSlider.replaceChildren();topDots.replaceChildren();topDots.classList.remove('is-visible');liveCardEl.classList.remove('has-multi');
   document.querySelector('#liveCard').classList.toggle('has-slides',list.length>0);
   if(!list.length)return;
   const track=document.createElement('div');track.className='top-slider-track';
@@ -223,8 +224,13 @@ window.nyachoSetTopImages=(images,seconds)=>{
   topSlider.append(track);
   if(list.length<2)return;
   let index=0;
+  const dots=list.map((_u,i)=>{const dot=document.createElement('button');dot.type='button';dot.className='top-dot';dot.setAttribute('aria-label',`${i+1}번째 이미지`);dot.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();goTo(i);restart()});topDots.append(dot);return dot});
+  topDots.classList.add('is-visible');liveCardEl.classList.add('has-multi');
+  const paint=()=>dots.forEach((dot,i)=>dot.classList.toggle('active',i===index%list.length));
+  const goTo=next=>{if(index>=list.length){track.style.transition='none';index=0;track.style.transform='translateX(0)';void track.offsetWidth;track.style.transition=''}index=next;track.style.transform=`translateX(-${index*100}%)`;paint()};
+  const restart=()=>{clearInterval(topSlideTimer);topSlideTimer=setInterval(()=>goTo(index+1),sec*1000)};
   track.addEventListener('transitionend',event=>{if(event.target!==track||index<list.length)return;track.style.transition='none';index=0;track.style.transform='translateX(0)';void track.offsetWidth;track.style.transition=''});
-  topSlideTimer=setInterval(()=>{index+=1;track.style.transform=`translateX(-${index*100}%)`},sec*1000);
+  paint();restart();
 };
 window.nyachoSetTopImages(Array.isArray(savedSettings.topImages)&&savedSettings.topImages.length?savedSettings.topImages:(savedSettings.profileImage?[savedSettings.profileImage]:[]),savedSettings.slideSeconds);
 
