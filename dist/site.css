@@ -686,3 +686,7 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .top-dot.active{width:28px;background:#fff}
 .top-dot:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:640px){.top-dots{bottom:10px;gap:6px;padding:6px 10px}.top-dot{width:8px;height:8px}.top-dot.active{width:22px}}
+
+
+/* 방송 공지 내용: 남는 공간만큼 보여주고 넘칠 때만 ... 처리 (줄 수는 script.js의 fitNoticeExcerpt가 계산) */
+.broadcast-notice-card p{-webkit-line-clamp:var(--notice-lines,2)!important;line-clamp:var(--notice-lines,2)}
