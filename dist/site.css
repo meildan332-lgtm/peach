@@ -690,3 +690,6 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 
 /* 방송 공지 내용: 남는 공간만큼 보여주고 넘칠 때만 ... 처리 (줄 수는 script.js의 fitNoticeExcerpt가 계산) */
 .broadcast-notice-card p{-webkit-line-clamp:var(--notice-lines,2)!important;line-clamp:var(--notice-lines,2)}
+
+/* 오늘 일정 칸: 일정이 있어도 일정 없음 상태(185px)보다 줄어들지 않게 최소 높이 고정 */
+#todaySchedule,#todaySchedule.empty-schedule{min-height:185px!important}
