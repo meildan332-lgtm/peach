@@ -692,4 +692,7 @@ html[data-view="hotclip"] #today,html[data-view="hotclip"] #calendar,html[data-v
 .broadcast-notice-card p{-webkit-line-clamp:var(--notice-lines,2)!important;line-clamp:var(--notice-lines,2)}
 
 /* 오늘 일정 칸: 일정이 있어도 일정 없음 상태(185px)보다 줄어들지 않게 최소 높이 고정 */
-#todaySchedule,#todaySchedule.empty-schedule{min-height:185px!important}
+#todaySchedule,#todaySchedule.empty-schedule{min-height:139px!important}
+
+/* 모바일: 사진 넘김 점이 화면 맨 아래로 가던 문제 수정 — 점(.top-dots)이 카드 기준으로 배치되도록 카드를 기준 위치로 지정 */
+.live-card.photo-card{position:relative}
